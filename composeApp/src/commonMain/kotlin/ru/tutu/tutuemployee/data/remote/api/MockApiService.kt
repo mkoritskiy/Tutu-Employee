@@ -282,28 +282,28 @@ class MockApiService : ApiService {
                 title = "Новый офис в Санкт-Петербурге",
                 previewText = "Мы рады сообщить об открытии нашего нового офиса...",
                 imageUrl = "https://picsum.photos/400/300?random=1",
-                publishedAt = "2024-01-15T10:30:00Z"
+                publishedAt = "2025-01-15T10:30:00Z"
             ),
             NewsPreviewDto(
                 id = "news_2",
                 title = "Tutu Tech Day 2025",
                 previewText = "Приглашаем всех на ежегодную техническую конференцию...",
                 imageUrl = "https://picsum.photos/400/300?random=2",
-                publishedAt = "2024-01-14T14:00:00Z"
+                publishedAt = "2025-01-14T14:00:00Z"
             ),
             NewsPreviewDto(
                 id = "news_3",
                 title = "Обновление корпоративного портала",
                 previewText = "Представляем новую версию корпоративного портала...",
                 imageUrl = "https://picsum.photos/400/300?random=3",
-                publishedAt = "2024-01-13T09:00:00Z"
+                publishedAt = "2025-01-13T09:00:00Z"
             ),
             NewsPreviewDto(
                 id = "news_4",
                 title = "Yoga в офисе",
                 previewText = "Каждый четверг в 18:00 - занятия йогой в офисе...",
                 imageUrl = "https://picsum.photos/400/300?random=4",
-                publishedAt = "2024-01-12T12:00:00Z"
+                publishedAt = "2025-01-12T12:00:00Z"
             )
         )
     }
@@ -325,7 +325,7 @@ class MockApiService : ApiService {
                 Добро пожаловать!
             """.trimIndent(),
             imageUrl = "https://picsum.photos/800/600?random=1",
-            publishedAt = "2024-01-15T10:30:00Z",
+            publishedAt = "2025-01-15T10:30:00Z",
             tags = listOf("офис", "новости", "санкт-петербург"),
             author = AuthorDto(
                 id = "author-1",
@@ -391,7 +391,7 @@ class MockApiService : ApiService {
             ),
             VacationPeriodDto(
                 vacationId = "vac-2",
-                startDate = "2024-12-25",
+                startDate = "2025-12-25",
                 endDate = "2025-01-08",
                 type = "paid",
                 approvedBy = "mgr-1",
@@ -399,8 +399,8 @@ class MockApiService : ApiService {
             ),
             VacationPeriodDto(
                 vacationId = "vac-3",
-                startDate = "2024-08-01",
-                endDate = "2024-08-14",
+                startDate = "2025-08-01",
+                endDate = "2025-08-14",
                 type = "paid",
                 approvedBy = "mgr-1",
                 status = "approved"
@@ -464,7 +464,7 @@ class MockApiService : ApiService {
                 title = "Новый офис в Санкт-Петербурге",
                 content = "Мы рады сообщить об открытии нашего нового офиса в Санкт-Петербурге! Современное пространство для работы и творчества.",
                 imageUrl = "https://picsum.photos/400/300?random=1",
-                publishedAt = "2024-01-15T10:30:00Z",
+                publishedAt = "2025-01-15T10:30:00Z",
                 category = NewsCategoryDto.COMPANY
             ),
             NewsDto(
@@ -472,7 +472,7 @@ class MockApiService : ApiService {
                 title = "Tutu Tech Day 2025",
                 content = "Приглашаем всех на ежегодную техническую конференцию! Доклады, workshops и networking.",
                 imageUrl = "https://picsum.photos/400/300?random=2",
-                publishedAt = "2024-01-14T14:00:00Z",
+                publishedAt = "2025-01-14T14:00:00Z",
                 category = NewsCategoryDto.EVENTS
             ),
             NewsDto(
@@ -480,7 +480,7 @@ class MockApiService : ApiService {
                 title = "Обновление корпоративного портала",
                 content = "Представляем новую версию корпоративного портала с улучшенным интерфейсом и новыми функциями.",
                 imageUrl = "https://picsum.photos/400/300?random=3",
-                publishedAt = "2024-01-13T09:00:00Z",
+                publishedAt = "2025-01-13T09:00:00Z",
                 category = NewsCategoryDto.COMPANY
             ),
             NewsDto(
@@ -488,7 +488,7 @@ class MockApiService : ApiService {
                 title = "Yoga в офисе",
                 content = "Каждый четверг в 18:00 - занятия йогой в офисе. Присоединяйтесь!",
                 imageUrl = "https://picsum.photos/400/300?random=4",
-                publishedAt = "2024-01-12T12:00:00Z",
+                publishedAt = "2025-01-12T12:00:00Z",
                 category = NewsCategoryDto.OFFICE
             )
         )
@@ -623,28 +623,28 @@ class MockApiService : ApiService {
                 title = "Провести 1-on-1 с менеджером",
                 description = "Обсудить цели на квартал и текущие проекты",
                 status = TaskStatusDto.TODO,
-                dueDate = "2024-01-20T00:00:00Z"
+                dueDate = "2025-01-20T00:00:00Z"
             ),
             TaskDto(
                 id = "task_2",
                 title = "Заполнить отчет по проекту",
                 description = "Подвести итоги спринта и описать результаты",
                 status = TaskStatusDto.IN_PROGRESS,
-                dueDate = "2024-01-18T00:00:00Z"
+                dueDate = "2025-01-18T00:00:00Z"
             ),
             TaskDto(
                 id = "task_3",
                 title = "Пройти курс по Kotlin Coroutines",
                 description = "Завершить все модули и получить сертификат",
                 status = TaskStatusDto.IN_PROGRESS,
-                dueDate = "2024-01-25T00:00:00Z"
+                dueDate = "2025-01-25T00:00:00Z"
             ),
             TaskDto(
                 id = "task_4",
                 title = "Обновить профиль в корпоративной системе",
                 description = "Добавить информацию о навыках и проектах",
                 status = TaskStatusDto.DONE,
-                dueDate = "2024-01-10T00:00:00Z"
+                dueDate = "2025-01-10T00:00:00Z"
             )
         )
     }
@@ -653,8 +653,8 @@ class MockApiService : ApiService {
         return listOf(
             VacationDto(
                 id = "vac_1",
-                startDate = "2024-02-10",
-                endDate = "2024-02-20",
+                startDate = "2025-02-10",
+                endDate = "2025-02-20",
                 daysCount = 10,
                 status = VacationStatusDto.PLANNED,
                 reason = "Отпуск"
@@ -662,7 +662,7 @@ class MockApiService : ApiService {
             VacationDto(
                 id = "vac_2",
                 startDate = "2023-12-25",
-                endDate = "2024-01-08",
+                endDate = "2025-01-08",
                 daysCount = 14,
                 status = VacationStatusDto.APPROVED,
                 reason = "Новогодние праздники"
@@ -724,7 +724,7 @@ class MockApiService : ApiService {
             WorkspaceBookingDto(
                 id = "ws_1",
                 workspaceNumber = "A-15",
-                date = "2024-01-16",
+                date = "2025-01-16",
                 isBooked = true,
                 bookedBy = "Иван Иванов",
                 floor = 1
@@ -732,7 +732,7 @@ class MockApiService : ApiService {
             WorkspaceBookingDto(
                 id = "ws_2",
                 workspaceNumber = "A-16",
-                date = "2024-01-16",
+                date = "2025-01-16",
                 isBooked = false,
                 bookedBy = null,
                 floor = 1
@@ -740,7 +740,7 @@ class MockApiService : ApiService {
             WorkspaceBookingDto(
                 id = "ws_3",
                 workspaceNumber = "B-23",
-                date = "2024-01-16",
+                date = "2025-01-16",
                 isBooked = true,
                 bookedBy = "Мария Петрова",
                 floor = 2
@@ -748,7 +748,7 @@ class MockApiService : ApiService {
             WorkspaceBookingDto(
                 id = "ws_4",
                 workspaceNumber = "B-24",
-                date = "2024-01-16",
+                date = "2025-01-16",
                 isBooked = false,
                 bookedBy = null,
                 floor = 2
@@ -756,7 +756,7 @@ class MockApiService : ApiService {
             WorkspaceBookingDto(
                 id = "ws_5",
                 workspaceNumber = "C-10",
-                date = "2024-01-16",
+                date = "2025-01-16",
                 isBooked = false,
                 bookedBy = null,
                 floor = 3
@@ -771,7 +771,7 @@ class MockApiService : ApiService {
                 title = "Обновление кофейных точек",
                 content = "На первом этаже установлена новая кофемашина с большим выбором напитков!",
                 imageUrl = "https://picsum.photos/400/300?random=20",
-                publishedAt = "2024-01-15T08:00:00Z",
+                publishedAt = "2025-01-15T08:00:00Z",
                 category = NewsCategoryDto.OFFICE
             ),
             NewsDto(
@@ -779,7 +779,7 @@ class MockApiService : ApiService {
                 title = "Настольный теннис по средам",
                 content = "Каждую среду в 17:00 - турнир по настольному теннису. Регистрация в Slack.",
                 imageUrl = "https://picsum.photos/400/300?random=21",
-                publishedAt = "2024-01-14T10:00:00Z",
+                publishedAt = "2025-01-14T10:00:00Z",
                 category = NewsCategoryDto.OFFICE
             ),
             NewsDto(
@@ -787,7 +787,7 @@ class MockApiService : ApiService {
                 title = "Книжный клуб",
                 content = "Присоединяйтесь к книжному клубу! Следующая встреча - обсуждение 'Clean Code'.",
                 imageUrl = "https://picsum.photos/400/300?random=22",
-                publishedAt = "2024-01-13T15:00:00Z",
+                publishedAt = "2025-01-13T15:00:00Z",
                 category = NewsCategoryDto.OFFICE
             )
         )

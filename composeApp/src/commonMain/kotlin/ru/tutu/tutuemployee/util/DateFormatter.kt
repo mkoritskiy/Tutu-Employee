@@ -79,7 +79,7 @@ object DateFormatter {
      * Для демонстрации используется фиксированная дата
      */
     fun getCurrentDate(): String {
-        return "11.12.2024"
+        return "11.12.2025"
     }
 
     /**
@@ -87,6 +87,6 @@ object DateFormatter {
      * Для демонстрации используется фиксированная дата
      */
     fun getCurrentDateIso(): String {
-        return "2024-12-11"
+        return "2025-12-11"
     }
 }
