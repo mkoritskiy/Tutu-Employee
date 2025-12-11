@@ -9,15 +9,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import ru.tutu.tutuemployee.data.model.FavoriteCard
+import org.koin.compose.viewmodel.koinViewModel
+import ru.tutu.tutuemployee.domain.model.FavoriteCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoritesScreen(
     navController: Any, // Временно используем Any вместо NavHostController
     onNavigateToWebView: (String, String) -> Unit,
-    viewModel: FavoritesViewModel = viewModel { FavoritesViewModel() }
+    viewModel: FavoritesViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

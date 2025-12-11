@@ -10,15 +10,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import ru.tutu.tutuemployee.data.model.*
+import org.koin.compose.viewmodel.koinViewModel
+import ru.tutu.tutuemployee.domain.model.*
 import ru.tutu.tutuemployee.presentation.components.BottomNavigationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     navController: Any, // Temporary workaround
-    viewModel: ProfileViewModel = viewModel { ProfileViewModel() }
+    viewModel: ProfileViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

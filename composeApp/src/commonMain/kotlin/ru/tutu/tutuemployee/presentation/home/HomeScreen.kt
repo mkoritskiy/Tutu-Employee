@@ -13,9 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import ru.tutu.tutuemployee.data.model.Birthday
-import ru.tutu.tutuemployee.data.model.News
-import ru.tutu.tutuemployee.data.model.User
+import org.koin.compose.viewmodel.koinViewModel
+import ru.tutu.tutuemployee.domain.model.Birthday
+import ru.tutu.tutuemployee.domain.model.News
+import ru.tutu.tutuemployee.domain.model.User
 import ru.tutu.tutuemployee.presentation.components.BottomNavigationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -23,7 +24,7 @@ import ru.tutu.tutuemployee.presentation.components.BottomNavigationBar
 fun HomeScreen(
     navController: Any, // Temporary workaround
     onNavigateToWebView: (String, String) -> Unit,
-    viewModel: HomeViewModel = viewModel { HomeViewModel() }
+    viewModel: HomeViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

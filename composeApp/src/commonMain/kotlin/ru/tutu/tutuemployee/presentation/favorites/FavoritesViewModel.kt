@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.tutu.tutuemployee.data.model.FavoriteCard
-import ru.tutu.tutuemployee.data.network.ApiService
+import ru.tutu.tutuemployee.domain.model.FavoriteCard
+import ru.tutu.tutuemployee.domain.repository.FavoritesRepository
 
 data class FavoritesUiState(
     val favorites: List<FavoriteCard> = emptyList(),
@@ -16,21 +16,22 @@ data class FavoritesUiState(
     val showAddDialog: Boolean = false
 )
 
-class FavoritesViewModel : ViewModel() {
-    private val apiService = ApiService()
+class FavoritesViewModel(
+    private val favoritesRepository: FavoritesRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(FavoritesUiState())
     val uiState: StateFlow<FavoritesUiState> = _uiState.asStateFlow()
 
     init {
-        loadFavorites()
+        loadData()
     }
 
-    private fun loadFavorites() {
+    private fun loadData() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
 
-            apiService.getFavorites()
+            favoritesRepository.getFavorites()
                 .onSuccess { favorites ->
                     _uiState.value = _uiState.value.copy(
                         favorites = favorites,
@@ -56,10 +57,10 @@ class FavoritesViewModel : ViewModel() {
 
     fun addFavorite(title: String, url: String) {
         viewModelScope.launch {
-            apiService.addFavorite(title, url)
+            favoritesRepository.addFavorite(title, url)
                 .onSuccess {
-                    loadFavorites()
                     hideAddDialog()
+                    loadData()
                 }
                 .onFailure { error ->
                     _uiState.value = _uiState.value.copy(error = error.message)
@@ -69,9 +70,9 @@ class FavoritesViewModel : ViewModel() {
 
     fun deleteFavorite(id: String) {
         viewModelScope.launch {
-            apiService.deleteFavorite(id)
+            favoritesRepository.deleteFavorite(id)
                 .onSuccess {
-                    loadFavorites()
+                    loadData()
                 }
                 .onFailure { error ->
                     _uiState.value = _uiState.value.copy(error = error.message)
@@ -80,6 +81,6 @@ class FavoritesViewModel : ViewModel() {
     }
 
     fun refresh() {
-        loadFavorites()
+        loadData()
     }
 }

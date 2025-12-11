@@ -12,17 +12,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import ru.tutu.tutuemployee.data.model.MerchCategory
-import ru.tutu.tutuemployee.data.model.MerchItem
+import org.koin.compose.viewmodel.koinViewModel
+import ru.tutu.tutuemployee.domain.model.MerchCategory
+import ru.tutu.tutuemployee.domain.model.MerchItem
 import ru.tutu.tutuemployee.presentation.components.BottomNavigationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MerchScreen(
     navController: NavHostController,
-    viewModel: MerchViewModel = viewModel { MerchViewModel() }
+    viewModel: MerchViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showPurchaseDialog by remember { mutableStateOf<MerchItem?>(null) }

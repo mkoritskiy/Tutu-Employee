@@ -6,19 +6,21 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.tutu.tutuemployee.data.network.ApiClient
-import ru.tutu.tutuemployee.data.network.ApiService
+import ru.tutu.tutuemployee.domain.model.User
+import ru.tutu.tutuemployee.domain.usecase.auth.LoginUseCase
 
 data class AuthUiState(
     val username: String = "",
     val password: String = "",
     val isLoading: Boolean = false,
+    val error: String? = null,
     val isAuthenticated: Boolean = false,
-    val error: String? = null
+    val user: User? = null
 )
 
-class AuthViewModel : ViewModel() {
-    private val apiService = ApiService()
+class AuthViewModel(
+    private val loginUseCase: LoginUseCase
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
@@ -32,23 +34,34 @@ class AuthViewModel : ViewModel() {
     }
 
     fun login() {
+        val state = _uiState.value
+        if (state.username.isBlank() || state.password.isBlank()) {
+            _uiState.value = state.copy(error = "Please fill in all fields")
+            return
+        }
+
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
 
-            apiService.login(_uiState.value.username, _uiState.value.password)
-                .onSuccess { response ->
-                    ApiClient.setAuthToken(response.token)
+            loginUseCase(state.username, state.password)
+                .onSuccess { (token, user) ->
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
-                        isAuthenticated = true
+                        isAuthenticated = true,
+                        user = user,
+                        error = null
                     )
                 }
-                .onFailure { error ->
+                .onFailure { exception ->
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
-                        error = error.message ?: "Ошибка авторизации"
+                        error = exception.message ?: "Login failed"
                     )
                 }
         }
+    }
+
+    fun resetAuthState() {
+        _uiState.value = _uiState.value.copy(isAuthenticated = false)
     }
 }

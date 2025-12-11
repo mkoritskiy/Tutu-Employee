@@ -1,7 +1,7 @@
 # 🚀 Tutu Employee - Мультиплатформенное приложение для сотрудников
 
-Современное корпоративное приложение, разработанное с использованием Compose Multiplatform для
-платформ Android и Web.
+Современное корпоративное приложение, разработанное с использованием **Compose Multiplatform** и *
+*Clean Architecture** для платформ Android, iOS и Web.
 
 ## ✨ Основные возможности
 
@@ -19,8 +19,26 @@
 - **Kotlin** 2.2.21
 - **Compose Multiplatform** 1.9.3
 - **Ktor** 3.1.1 - HTTP клиент
+- **Koin** 4.0.0 - Dependency Injection
 - **Material 3** Design
-- **MVVM** Architecture
+- **Clean Architecture** + **MVVM**
+
+## 🏛 Архитектура
+
+Проект построен по принципам **Clean Architecture** с четким разделением на слои:
+
+```
+📦 Domain Layer        → Бизнес-логика (Use Cases, Repository Interfaces)
+📦 Data Layer          → Работа с данными (API, DTO, Repository Implementations)
+📦 Presentation Layer  → UI (ViewModels, Screens)
+📦 DI Layer            → Dependency Injection (Koin Modules)
+```
+
+### 📚 Документация по архитектуре
+
+- **[🏛 Clean Architecture Guide](CLEAN_ARCHITECTURE.md)** - Подробное описание архитектуры
+- **[📚 Migration Guide](MIGRATION_GUIDE.md)** - Как работать с новой архитектурой
+- **[🚀 DI Quick Reference](DI_QUICK_REFERENCE.md)** - Быстрый справочник по DI
 
 ## 📦 Платформы
 
@@ -66,98 +84,182 @@ APK будет в: `composeApp/build/outputs/apk/debug/`
 
 ## 📚 Документация
 
-- [📖 Полная документация приложения](EMPLOYEE_APP_README.md)
-- [🔧 Руководство по настройке](SETUP_GUIDE.md)
-- [📊 Модели данных API](API_MODELS.md)
-- [📝 Сводка проекта](PROJECT_SUMMARY.md)
+### Архитектура и разработка
 
-## 🏗 Структура проекта
+- **[🏛 Clean Architecture](CLEAN_ARCHITECTURE.md)** - Полное описание архитектуры проекта
+- **[📚 Migration Guide](MIGRATION_GUIDE.md)** - Руководство по работе с DI и Clean Architecture
+- **[🚀 DI Quick Reference](DI_QUICK_REFERENCE.md)** - Быстрый справочник по Dependency Injection
+- **[🏗 Architecture Overview](ARCHITECTURE.md)** - Оригинальная документация архитектуры
+
+### Настройка и API
+
+- **[📖 Полная документация приложения](EMPLOYEE_APP_README.md)** - Детальное описание функционала
+- **[🔧 Руководство по настройке](SETUP_GUIDE.md)** - Setup guide для разработчиков
+- **[📊 Модели данных API](API_MODELS.md)** - Описание всех моделей данных
+- **[📝 Сводка проекта](PROJECT_SUMMARY.md)** - Краткая сводка проекта
+
+## 🏗 Структура проекта (Clean Architecture)
 
 ```
 TutuEmployee/
-├── composeApp/
-│   ├── commonMain/     # Общий код для всех платформ
-│   │   ├── data/       # Модели и API
-│   │   ├── navigation/ # Навигация
-│   │   └── presentation/ # UI (ViewModels + Screens)
-│   ├── androidMain/    # Android-специфичный код
-│   ├── jsMain/         # Web JavaScript
-│   ├── wasmJsMain/     # Web WebAssembly
-│   └── iosMain/        # iOS (в разработке)
-├── iosApp/             # iOS приложение
-├── gradle/             # Gradle wrapper
-└── docs/               # Дополнительная документация
+└── composeApp/src/commonMain/kotlin/ru/tutu/tutuemployee/
+    ├── domain/              # 🎯 Domain Layer (бизнес-логика)
+    │   ├── model/           # Domain entities
+    │   ├── repository/      # Repository interfaces
+    │   └── usecase/         # Business use cases
+    │
+    ├── data/                # 💾 Data Layer (работа с данными)
+    │   ├── remote/
+    │   │   ├── api/         # API Service (Ktor)
+    │   │   └── dto/         # Data Transfer Objects
+    │   └── repository/      # Repository implementations
+    │
+    ├── presentation/        # 🎨 Presentation Layer (UI)
+    │   ├── auth/
+    │   ├── home/
+    │   ├── profile/
+    │   ├── office/
+    │   ├── merch/
+    │   └── favorites/
+    │
+    ├── di/                  # 🔌 DI Layer (Koin)
+    │   ├── NetworkModule.kt
+    │   ├── RepositoryModule.kt
+    │   ├── UseCaseModule.kt
+    │   ├── ViewModelModule.kt
+    │   └── AppModule.kt
+    │
+    └── navigation/          # 🧭 Navigation
 ```
 
-## 🎨 Особенности реализации
+## 🎯 Ключевые преимущества архитектуры
 
-- **Material 3 Design** с адаптивной версткой
-- **Emoji иконки** для кроссплатформенности
-- **Reactive UI** с Jetpack Compose
-- **Type-safe navigation** с Compose Navigation
-- **REST API интеграция** через Ktor Client
-- **Mock API** для разработки без backend
+### ✅ Чистая архитектура
 
-## 🔌 API Integration
+- **Разделение ответственности**: каждый слой имеет четкую задачу
+- **Тестируемость**: легко писать unit-тесты для Use Cases
+- **Независимость от фреймворков**: бизнес-логика не зависит от UI или API
 
-### Настройка backend URL
+### ✅ Dependency Injection (Koin)
 
-Откройте `composeApp/src/commonMain/kotlin/ru/tutu/tutuemployee/data/network/ApiClient.kt`:
+- **Автоматическое внедрение зависимостей**
+- **Модульная структура**
+- **Легкое тестирование**
+
+### ✅ Use Cases Pattern
+
+- **Изолированная бизнес-логика**
+- **Переиспользуемые компоненты**
+- **Валидация на уровне бизнес-логики**
+
+### ✅ DTO Pattern
+
+- **Разделение API моделей и Domain моделей**
+- **Mappers для преобразования**
+- **Гибкость при изменении API**
+
+## 🔌 Пример работы с архитектурой
+
+### Добавление новой фичи
 
 ```kotlin
-object ApiClient {
-    private const val BASE_URL = "https://your-api-url.com/employee"
-    // ...
+// 1. Domain Layer - Use Case
+class GetProductsUseCase(
+    private val repository: ProductRepository
+) {
+    suspend operator fun invoke(): Result<List<Product>> {
+        return repository.getProducts()
+    }
+}
+
+// 2. Presentation Layer - ViewModel
+class ProductViewModel(
+    private val getProductsUseCase: GetProductsUseCase
+) : ViewModel() {
+    private val _uiState = MutableStateFlow(ProductUiState())
+    val uiState = _uiState.asStateFlow()
+    
+    init {
+        loadProducts()
+    }
+    
+    private fun loadProducts() {
+        viewModelScope.launch {
+            getProductsUseCase()
+                .onSuccess { products ->
+                    _uiState.value = _uiState.value.copy(products = products)
+                }
+        }
+    }
+}
+
+// 3. DI - Регистрация
+val useCaseModule = module {
+    factoryOf(::GetProductsUseCase)
+}
+
+val viewModelModule = module {
+    viewModelOf(::ProductViewModel)
+}
+
+// 4. UI - Screen
+@Composable
+fun ProductScreen(
+    viewModel: ProductViewModel = koinViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    // ... UI код
 }
 ```
 
-### Использование Mock API
+## 🔧 Настройка backend URL
 
-Для разработки без реального backend:
-
-1. Откройте `MockApiService.kt` в пакете `data.network`
-2. В `ApiService.kt` замените реальные вызовы API на mock:
+Откройте `composeApp/src/commonMain/kotlin/ru/tutu/tutuemployee/di/NetworkModule.kt`:
 
 ```kotlin
-class ApiService {
-    private val mockService = MockApiService()  // Добавить
-    // private val client = ApiClient.httpClient  // Закомментировать
-    
-    suspend fun getNews(): Result<List<News>> {
-        return mockService.getNews()  // Использовать mock
+single {
+    HttpClient {
+        install(DefaultRequest) {
+            url("https://your-api-url.com/employee")  // ← Измените здесь
+        }
     }
 }
 ```
 
-Mock данные включают:
-
-- 3 новости компании
-- 3 дня рождения
-- 4 сотрудника для поиска
-- 3 достижения
-- 3 задачи
-- 2 отпуска
-- 3 курса
-- 16 рабочих мест
-- 6 товаров в магазине
-- 3 избранные ссылки
-
-## 📱 Скриншоты и демо
-
-_(Скриншоты будут добавлены после финальной полировки UI)_
-
 ## 🧪 Тестирование
 
-### Unit тесты
+### Unit тесты для Use Cases
 
-```bash
-./gradlew :composeApp:testDebugUnitTest
+```kotlin
+class LoginUseCaseTest {
+    @Test
+    fun `login with valid credentials returns success`() = runTest {
+        val mockRepository = mockk<AuthRepository>()
+        coEvery { mockRepository.login("user", "pass") } returns Result.success(...)
+        
+        val useCase = LoginUseCase(mockRepository)
+        val result = useCase("user", "pass")
+        
+        assertTrue(result.isSuccess)
+    }
+}
 ```
 
-### UI тесты (Android)
+### Unit тесты для ViewModels
 
-```bash
-./gradlew :composeApp:connectedAndroidTest
+```kotlin
+class HomeViewModelTest {
+    @Test
+    fun `loadData updates state with news`() = runTest {
+        val mockUseCase = mockk<GetNewsUseCase>()
+        coEvery { mockUseCase() } returns Result.success(listOf(mockNews))
+        
+        val viewModel = HomeViewModel(mockUseCase, mockk(), mockk())
+        advanceUntilIdle()
+        
+        assertEquals(1, viewModel.uiState.value.news.size)
+    }
+}
 ```
 
 ## 🚢 Deployment
@@ -176,31 +278,34 @@ _(Скриншоты будут добавлены после финальной
 
 Результат в: `composeApp/build/dist/js/productionExecutable/`
 
-## 🤝 Contributing
-
-1. Fork проекта
-2. Создайте feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit изменений (`git commit -m 'Add some AmazingFeature'`)
-4. Push в branch (`git push origin feature/AmazingFeature`)
-5. Откройте Pull Request
-
 ## 📊 Статистика проекта
 
-- **Файлов Kotlin**: 32+
+- **Файлов Kotlin**: 60+
 - **Экранов**: 7
-- **Data Models**: 10
+- **Domain Models**: 10
+- **Use Cases**: 10+
+- **Repositories**: 7
 - **ViewModels**: 6
-- **API Endpoints**: 14
-- **Lines of Code**: ~2500+
+- **DI Modules**: 4
+- **Lines of Code**: ~4000+
 
 ## 🔮 Roadmap
 
+### ✅ Завершено
+
+- ✅ Clean Architecture
+- ✅ Dependency Injection (Koin)
+- ✅ Domain Layer с Use Cases
+- ✅ Repository Pattern
+- ✅ DTO Pattern с mappers
+- ✅ MVVM с StateFlow
+
 ### В разработке
 
-- [ ] Реализация полноценной navigation
-- [ ] WebView платформо-специфичные реализации
-- [ ] Offline режим с кешированием
-- [ ] Unit и UI тесты
+- [ ] Unit тесты для Use Cases
+- [ ] UI тесты для Screens
+- [ ] Локальное хранилище (Room/SQLDelight)
+- [ ] Offline-first подход
 
 ### Планируется
 
@@ -210,38 +315,48 @@ _(Скриншоты будут добавлены после финальной
 - [ ] Биометрическая авторизация
 - [ ] iOS версия
 
+## 🤝 Contributing
+
+### Добавление новой фичи
+
+1. Создайте Domain модели в `domain/model/`
+2. Создайте Repository interface в `domain/repository/`
+3. Создайте Use Cases в `domain/usecase/`
+4. Реализуйте Repository в `data/repository/`
+5. Создайте ViewModel в `presentation/`
+6. Зарегистрируйте все в соответствующих DI модулях
+7. Создайте Screen
+
+См. подробнее в [Migration Guide](MIGRATION_GUIDE.md)
+
 ## 📄 Лицензия
 
 Проект для внутреннего использования © Tutu.ru 2024
-
-## 👥 Команда
-
-Разработано командой Tutu.ru
 
 ## 🆘 Поддержка
 
 При возникновении проблем:
 
-1. Проверьте [Setup Guide](SETUP_GUIDE.md)
-2. Посмотрите [FAQ](SETUP_GUIDE.md#типичные-проблемы-и-решения)
-3. Создайте Issue в репозитории
-4. Свяжитесь с командой разработки
+1. Проверьте [Clean Architecture Guide](CLEAN_ARCHITECTURE.md)
+2. Посмотрите [Migration Guide](MIGRATION_GUIDE.md)
+3. Используйте [DI Quick Reference](DI_QUICK_REFERENCE.md)
+4. Создайте Issue в репозитории
 
 ---
 
-**Версия**: 1.0.0  
-**Статус**: ✅ Production Ready (Alpha)  
+**Версия**: 2.0.0 (Clean Architecture)  
+**Статус**: ✅ Production Ready (Beta)  
 **Последнее обновление**: Декабрь 2024
 
 ## 🔗 Полезные ссылки
 
 - [Kotlin Multiplatform](https://www.jetbrains.com/kotlin-multiplatform/)
 - [Compose Multiplatform](https://www.jetbrains.com/lp/compose-multiplatform/)
+- [Koin Documentation](https://insert-koin.io/)
 - [Ktor Documentation](https://ktor.io/)
 - [Material 3 Design](https://m3.material.io/)
-- [Kotlin Documentation](https://kotlinlang.org/docs/)
+- [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 
 ---
 
-Made with ❤️ by Tutu.ru Team
-# Tutu-Employee
+Made with ❤️ by Tutu.ru Team using Clean Architecture principles

@@ -6,9 +6,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.tutu.tutuemployee.data.model.News
-import ru.tutu.tutuemployee.data.model.WorkspaceBooking
-import ru.tutu.tutuemployee.data.network.ApiService
+import kotlinx.datetime.*
+import ru.tutu.tutuemployee.domain.model.News
+import ru.tutu.tutuemployee.domain.model.WorkspaceBooking
+import ru.tutu.tutuemployee.domain.repository.NewsRepository
+import ru.tutu.tutuemployee.domain.repository.OfficeRepository
 
 data class OfficeUiState(
     val workspaceBookings: List<WorkspaceBooking> = emptyList(),
@@ -18,13 +20,18 @@ data class OfficeUiState(
     val error: String? = null
 )
 
-class OfficeViewModel : ViewModel() {
-    private val apiService = ApiService()
+class OfficeViewModel(
+    private val officeRepository: OfficeRepository,
+    private val newsRepository: NewsRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(OfficeUiState())
     val uiState: StateFlow<OfficeUiState> = _uiState.asStateFlow()
 
     init {
+        // Используем текущую дату
+        val today = "2024-12-11" // TODO: использовать реальную текущую дату
+        _uiState.value = _uiState.value.copy(selectedDate = today)
         loadData()
     }
 
@@ -32,43 +39,24 @@ class OfficeViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
 
-            val today = getCurrentDate()
-            val workspacesResult = apiService.getWorkspaceBookings(today)
-            val newsResult = apiService.getOfficeNews()
+            val workspacesResult =
+                officeRepository.getWorkspaceBookings(_uiState.value.selectedDate)
+            val newsResult = newsRepository.getOfficeNews()
 
             _uiState.value = _uiState.value.copy(
                 workspaceBookings = workspacesResult.getOrDefault(emptyList()),
                 officeNews = newsResult.getOrDefault(emptyList()),
-                selectedDate = today,
                 isLoading = false
             )
         }
     }
 
     fun selectDate(date: String) {
-        viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, selectedDate = date)
-
-            apiService.getWorkspaceBookings(date)
-                .onSuccess { bookings ->
-                    _uiState.value = _uiState.value.copy(
-                        workspaceBookings = bookings,
-                        isLoading = false
-                    )
-                }
-                .onFailure {
-                    _uiState.value = _uiState.value.copy(isLoading = false)
-                }
-        }
+        _uiState.value = _uiState.value.copy(selectedDate = date)
+        loadData()
     }
 
     fun refresh() {
         loadData()
-    }
-
-    private fun getCurrentDate(): String {
-        // Здесь используется временная реализация
-        // В реальном приложении используйте kotlinx.datetime
-        return "2024-01-15"
     }
 }

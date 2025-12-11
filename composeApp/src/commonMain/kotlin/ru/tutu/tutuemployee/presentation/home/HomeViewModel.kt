@@ -6,10 +6,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.tutu.tutuemployee.data.model.Birthday
-import ru.tutu.tutuemployee.data.model.News
-import ru.tutu.tutuemployee.data.model.User
-import ru.tutu.tutuemployee.data.network.ApiService
+import ru.tutu.tutuemployee.domain.model.Birthday
+import ru.tutu.tutuemployee.domain.model.News
+import ru.tutu.tutuemployee.domain.model.User
+import ru.tutu.tutuemployee.domain.usecase.employee.GetBirthdaysUseCase
+import ru.tutu.tutuemployee.domain.usecase.employee.SearchEmployeesUseCase
+import ru.tutu.tutuemployee.domain.usecase.news.GetNewsUseCase
 
 data class HomeUiState(
     val news: List<News> = emptyList(),
@@ -20,8 +22,11 @@ data class HomeUiState(
     val error: String? = null
 )
 
-class HomeViewModel : ViewModel() {
-    private val apiService = ApiService()
+class HomeViewModel(
+    private val getNewsUseCase: GetNewsUseCase,
+    private val getBirthdaysUseCase: GetBirthdaysUseCase,
+    private val searchEmployeesUseCase: SearchEmployeesUseCase
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
@@ -34,8 +39,8 @@ class HomeViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
 
-            val newsResult = apiService.getNews()
-            val birthdaysResult = apiService.getBirthdays()
+            val newsResult = getNewsUseCase()
+            val birthdaysResult = getBirthdaysUseCase()
 
             _uiState.value = _uiState.value.copy(
                 news = newsResult.getOrDefault(emptyList()),
@@ -57,7 +62,7 @@ class HomeViewModel : ViewModel() {
 
     private fun searchEmployees(query: String) {
         viewModelScope.launch {
-            apiService.searchEmployees(query)
+            searchEmployeesUseCase(query)
                 .onSuccess { results ->
                     _uiState.value = _uiState.value.copy(searchResults = results)
                 }
