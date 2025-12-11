@@ -197,7 +197,7 @@ fun MerchItemCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(280.dp)
+            .height(300.dp)
             .clickable(onClick = onClick)
     ) {
         Column(

@@ -383,8 +383,8 @@ class MockApiService : ApiService {
         return listOf(
             VacationPeriodDto(
                 vacationId = "vac-1",
-                startDate = "2025-02-10",
-                endDate = "2025-02-20",
+                startDate = "2026-02-10",
+                endDate = "2026-02-20",
                 type = "paid",
                 approvedBy = "mgr-1",
                 status = "approved"
@@ -392,7 +392,7 @@ class MockApiService : ApiService {
             VacationPeriodDto(
                 vacationId = "vac-2",
                 startDate = "2025-12-25",
-                endDate = "2025-01-08",
+                endDate = "2026-01-08",
                 type = "paid",
                 approvedBy = "mgr-1",
                 status = "approved"
@@ -590,32 +590,6 @@ class MockApiService : ApiService {
         )
     }
 
-    private fun getMockAchievements(): List<AchievementDto> {
-        return listOf(
-            AchievementDto(
-                id = "ach_1",
-                title = "Первый год в компании",
-                description = "Поздравляем с первым годом работы в Tutu!",
-                iconUrl = "celebration",
-                earnedAt = "2023-06-01T00:00:00Z"
-            ),
-            AchievementDto(
-                id = "ach_2",
-                title = "Code Review Master",
-                description = "Провел 100+ code review",
-                iconUrl = "code",
-                earnedAt = "2023-09-15T00:00:00Z"
-            ),
-            AchievementDto(
-                id = "ach_3",
-                title = "Наставник",
-                description = "Помог адаптироваться 3 новым сотрудникам",
-                iconUrl = "school",
-                earnedAt = "2023-12-01T00:00:00Z"
-            )
-        )
-    }
-
     private fun getMockTasks(): List<TaskDto> {
         return listOf(
             TaskDto(
@@ -645,35 +619,6 @@ class MockApiService : ApiService {
                 description = "Добавить информацию о навыках и проектах",
                 status = TaskStatusDto.DONE,
                 dueDate = "2025-01-10T00:00:00Z"
-            )
-        )
-    }
-
-    private fun getMockVacations(): List<VacationDto> {
-        return listOf(
-            VacationDto(
-                id = "vac_1",
-                startDate = "2025-02-10",
-                endDate = "2025-02-20",
-                daysCount = 10,
-                status = VacationStatusDto.PLANNED,
-                reason = "Отпуск"
-            ),
-            VacationDto(
-                id = "vac_2",
-                startDate = "2023-12-25",
-                endDate = "2025-01-08",
-                daysCount = 14,
-                status = VacationStatusDto.APPROVED,
-                reason = "Новогодние праздники"
-            ),
-            VacationDto(
-                id = "vac_3",
-                startDate = "2023-08-01",
-                endDate = "2023-08-14",
-                daysCount = 14,
-                status = VacationStatusDto.APPROVED,
-                reason = "Летний отпуск"
             )
         )
     }
@@ -769,7 +714,7 @@ class MockApiService : ApiService {
             NewsDto(
                 id = "office_1",
                 title = "Обновление кофейных точек",
-                content = "На первом этаже установлена новая кофемашина с большим выбором напитков!",
+                content = "Установлена новая кофемашина с большим выбором напитков!",
                 imageUrl = "https://picsum.photos/400/300?random=20",
                 publishedAt = "2025-01-15T08:00:00Z",
                 category = NewsCategoryDto.OFFICE
@@ -777,7 +722,7 @@ class MockApiService : ApiService {
             NewsDto(
                 id = "office_2",
                 title = "Настольный теннис по средам",
-                content = "Каждую среду в 17:00 - турнир по настольному теннису. Регистрация в Slack.",
+                content = "Каждую среду в 17:00 - турнир по настольному теннису. Регистрация в Zulip.",
                 imageUrl = "https://picsum.photos/400/300?random=21",
                 publishedAt = "2025-01-14T10:00:00Z",
                 category = NewsCategoryDto.OFFICE
@@ -785,7 +730,7 @@ class MockApiService : ApiService {
             NewsDto(
                 id = "office_3",
                 title = "Книжный клуб",
-                content = "Присоединяйтесь к книжному клубу! Следующая встреча - обсуждение 'Clean Code'.",
+                content = "Присоединяйтесь к книжному клубу! Следующая встреча - обсуждение 1984.",
                 imageUrl = "https://picsum.photos/400/300?random=22",
                 publishedAt = "2025-01-13T15:00:00Z",
                 category = NewsCategoryDto.OFFICE
@@ -866,35 +811,6 @@ class MockApiService : ApiService {
                 imageUrl = "https://picsum.photos/300/300?random=37",
                 category = MerchCategoryDto.ELECTRONICS,
                 inStock = true
-            )
-        )
-    }
-
-    private fun getDefaultFavorites(): List<FavoriteCardDto> {
-        return listOf(
-            FavoriteCardDto(
-                id = "fav_1",
-                title = "Jira",
-                url = "https://jira.tutu.ru",
-                iconUrl = null
-            ),
-            FavoriteCardDto(
-                id = "fav_2",
-                title = "Confluence",
-                url = "https://confluence.tutu.ru",
-                iconUrl = null
-            ),
-            FavoriteCardDto(
-                id = "fav_3",
-                title = "GitLab",
-                url = "https://gitlab.tutu.ru",
-                iconUrl = null
-            ),
-            FavoriteCardDto(
-                id = "fav_4",
-                title = "Корпоративный портал",
-                url = "https://portal.tutu.ru",
-                iconUrl = null
             )
         )
     }
