@@ -38,7 +38,16 @@ fun MerchScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Магазин мерча") },
+                title = {
+                    Text(
+                        "Магазин мерча",
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                ),
                 actions = {
                     // Баланс баллов
                     Surface(

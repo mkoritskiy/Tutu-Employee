@@ -20,7 +20,7 @@
 - **Compose Multiplatform** 1.9.3
 - **Ktor** 3.1.1 - HTTP клиент
 - **Koin** 4.0.0 - Dependency Injection
-- **Material 3** Design
+- **Material 3** Design 🎨 *Новый стильный UI!*
 - **Clean Architecture** + **MVVM**
 
 ## 🏛 Архитектура
@@ -83,6 +83,14 @@ APK будет в: `composeApp/build/outputs/apk/debug/`
 Откройте папку `/iosApp` в Xcode и запустите проект.
 
 ## 📚 Документация
+
+### 🎨 Material3 UI Design (Новое!)
+
+- **[📚 Material3 Index](MATERIAL3_INDEX.md)** ⭐ *Главная страница UI документации*
+- **[🚀 Quick Start Material3](QUICK_START_MATERIAL3.md)** - Быстрый старт за 5 минут
+- **[🎨 UI Components Guide](UI_COMPONENTS_GUIDE.md)** - Гид по всем компонентам
+- **[🌈 Color Palette Reference](COLOR_PALETTE_REFERENCE.md)** - Цветовая палитра
+- **[📊 Material3 Summary](MATERIAL3_SUMMARY.md)** - Итоговая сводка обновления
 
 ### Архитектура и разработка
 
@@ -299,6 +307,10 @@ class HomeViewModelTest {
 - ✅ Repository Pattern
 - ✅ DTO Pattern с mappers
 - ✅ MVVM с StateFlow
+- ✅ Material3 UI Design 🎨 *Новое!*
+- ✅ Стильные компоненты
+- ✅ Темная тема
+- ✅ Полная UI документация
 
 ### В разработке
 
@@ -310,10 +322,10 @@ class HomeViewModelTest {
 ### Планируется
 
 - [ ] Push уведомления
-- [ ] Темная тема
 - [ ] Локализация (EN/RU)
 - [ ] Биометрическая авторизация
 - [ ] iOS версия
+- [ ] Анимации переходов между экранами
 
 ## 🤝 Contributing
 
@@ -344,9 +356,9 @@ class HomeViewModelTest {
 
 ---
 
-**Версия**: 2.0.0 (Clean Architecture)  
-**Статус**: ✅ Production Ready (Beta)  
-**Последнее обновление**: Декабрь 2024
+**Версия**: 2.1.0 (Clean Architecture + Material3 UI)  
+**Статус**: ✅ Production Ready  
+**Последнее обновление**: Декабрь 2025
 
 ## 🔗 Полезные ссылки
 
@@ -359,4 +371,4 @@ class HomeViewModelTest {
 
 ---
 
-Made with ❤️ by Tutu.ru Team using Clean Architecture principles
+Made with ❤️ by Tutu.ru Team using Clean Architecture + Material3 Design 🎨

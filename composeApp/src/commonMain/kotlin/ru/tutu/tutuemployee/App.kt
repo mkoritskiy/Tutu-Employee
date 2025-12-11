@@ -1,15 +1,15 @@
 package ru.tutu.tutuemployee
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import org.koin.compose.KoinContext
 import ru.tutu.tutuemployee.navigation.NavigationHost
 import ru.tutu.tutuemployee.navigation.Screen
+import ru.tutu.tutuemployee.ui.theme.TutuEmployeeTheme
 
 @Composable
 fun App() {
     KoinContext {
-        MaterialTheme {
+        TutuEmployeeTheme {
             NavigationHost(
                 startDestination = Screen.Home
             )
