@@ -5,6 +5,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -210,9 +212,10 @@ fun StatsCard(availableVacationDays: Int, bonusPoints: Int) {
                 modifier = Modifier.padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "📅",
-                    style = MaterialTheme.typography.displayMedium
+                Icon(
+                    Icons.Default.CalendarToday,
+                    contentDescription = null,
+                    modifier = Modifier.size(48.dp)
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
@@ -239,9 +242,10 @@ fun StatsCard(availableVacationDays: Int, bonusPoints: Int) {
                 modifier = Modifier.padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "⭐",
-                    style = MaterialTheme.typography.displayMedium
+                Icon(
+                    Icons.Default.Star,
+                    contentDescription = null,
+                    modifier = Modifier.size(48.dp)
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
@@ -272,9 +276,11 @@ fun AchievementsSection(achievements: List<Achievement>) {
                     modifier = Modifier.padding(12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = "🏆",
-                        style = MaterialTheme.typography.displayMedium
+                    Icon(
+                        Icons.Default.EmojiEvents,
+                        contentDescription = null,
+                        modifier = Modifier.size(48.dp),
+                        tint = MaterialTheme.colorScheme.primary
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
@@ -297,13 +303,18 @@ fun TaskCard(task: Task) {
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = when (task.status) {
-                    TaskStatus.TODO -> "⭕"
-                    TaskStatus.IN_PROGRESS -> "⏳"
-                    TaskStatus.DONE -> "✅"
+            Icon(
+                when (task.status) {
+                    TaskStatus.TODO -> Icons.Default.RadioButtonUnchecked
+                    TaskStatus.IN_PROGRESS -> Icons.Default.HourglassEmpty
+                    TaskStatus.DONE -> Icons.Default.CheckCircle
                 },
-                style = MaterialTheme.typography.titleLarge
+                contentDescription = null,
+                tint = when (task.status) {
+                    TaskStatus.TODO -> MaterialTheme.colorScheme.onSurface
+                    TaskStatus.IN_PROGRESS -> MaterialTheme.colorScheme.primary
+                    TaskStatus.DONE -> MaterialTheme.colorScheme.tertiary
+                }
             )
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -339,9 +350,10 @@ fun VacationCard(vacation: Vacation) {
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "📅",
-                style = MaterialTheme.typography.titleLarge
+            Icon(
+                Icons.Default.CalendarToday,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
             )
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -403,9 +415,10 @@ fun CourseCard(course: Course) {
                 }
 
                 if (course.isCompleted) {
-                    Text(
-                        text = "✅",
-                        style = MaterialTheme.typography.titleLarge
+                    Icon(
+                        Icons.Default.CheckCircle,
+                        contentDescription = "Завершен",
+                        tint = MaterialTheme.colorScheme.tertiary
                     )
                 }
             }

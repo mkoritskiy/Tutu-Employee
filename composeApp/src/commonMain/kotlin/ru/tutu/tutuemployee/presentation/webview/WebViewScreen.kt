@@ -1,6 +1,8 @@
 package ru.tutu.tutuemployee.presentation.webview
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,7 +22,7 @@ fun WebViewScreen(
                 title = { Text(title) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Text("←")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
                     }
                 }
             )
@@ -58,10 +60,20 @@ fun WebViewScreen(
                     Column(
                         modifier = Modifier.padding(16.dp)
                     ) {
-                        Text(
-                            text = "ℹ️ WebView",
-                            style = MaterialTheme.typography.titleMedium
-                        )
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                Icons.Default.Info,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Text(
+                                text = "WebView",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                        }
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "Для полноценной работы WebView необходима платформо-специфичная реализация.",

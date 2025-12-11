@@ -7,6 +7,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -60,9 +62,10 @@ fun MerchScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
-                            Text(
-                                text = "���",
-                                style = MaterialTheme.typography.titleMedium
+                            Icon(
+                                Icons.Default.Star,
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp)
                             )
                             Text(
                                 text = "${uiState.userPoints}",
@@ -208,9 +211,10 @@ fun MerchItemCard(
                 shape = MaterialTheme.shapes.medium
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                    Text(
-                        text = "🎁",
-                        style = MaterialTheme.typography.displayMedium
+                    Icon(
+                        Icons.Default.CardGiftcard,
+                        contentDescription = null,
+                        modifier = Modifier.size(64.dp)
                     )
                 }
             }
@@ -241,9 +245,15 @@ fun MerchItemCard(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    Text(
-                        text = "⭐",
-                        style = MaterialTheme.typography.titleMedium
+                    Icon(
+                        Icons.Default.Star,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp),
+                        tint = if (userPoints >= item.price) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.error
+                        }
                     )
                     Text(
                         text = "${item.price}",
@@ -289,8 +299,30 @@ fun PurchaseDialog(
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text("Стоимость: ⭐ ${item.price}")
-                Text("Ваш баланс: ⭐ $userPoints")
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("Стоимость:")
+                    Icon(
+                        Icons.Default.Star,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Text("${item.price}")
+                }
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("Ваш баланс:")
+                    Icon(
+                        Icons.Default.Star,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Text("$userPoints")
+                }
 
                 if (!canPurchase) {
                     Spacer(modifier = Modifier.height(8.dp))

@@ -86,14 +86,14 @@ suspend fun examplePurchaseMerch(apiService: ApiService) {
     val purchaseResult = apiService.purchaseMerchItem("merch_1")
     purchaseResult.fold(
         onSuccess = {
-            println("\n✅ Покупка успешна!")
+            println("\n[SUCCESS] Покупка успешна!")
             // Проверяем новый баланс
             apiService.getCurrentUser().onSuccess { user ->
                 println("Остаток баллов: ${user.bonusPoints}")
             }
         },
         onFailure = { error ->
-            println("❌ Ошибка покупки: ${error.message}")
+            println("[ERROR] Ошибка покупки: ${error.message}")
         }
     )
 }
@@ -112,7 +112,7 @@ suspend fun exampleFavorites(apiService: ApiService) {
     // Добавить новую карточку
     val result2 = apiService.addFavorite("Slack", "https://slack.tutu.ru")
     result2.onSuccess { newFav ->
-        println("\n✅ Добавлено: ${newFav.title}")
+        println("\n[SUCCESS] Добавлено: ${newFav.title}")
     }
     
     // Получить обновленный список
@@ -127,7 +127,7 @@ suspend fun exampleFavorites(apiService: ApiService) {
     // Удалить карточку
     val result4 = apiService.deleteFavorite("fav_1")
     result4.onSuccess {
-        println("\n✅ Карточка удалена")
+        println("\n[SUCCESS] Карточка удалена")
     }
 }
 
@@ -136,7 +136,7 @@ suspend fun exampleProfile(apiService: ApiService) {
     // Достижения
     val achievements = apiService.getAchievements()
     achievements.onSuccess { list ->
-        println("🏆 Достижения (${list.size}):")
+        println("[TROPHY] Достижения (${list.size}):")
         list.forEach { ach ->
             println("  ${ach.iconUrl} ${ach.title}")
         }
@@ -145,7 +145,7 @@ suspend fun exampleProfile(apiService: ApiService) {
     // Задачи
     val tasks = apiService.getTasks()
     tasks.onSuccess { list ->
-        println("\n📋 Задачи:")
+        println("\n[LIST] Задачи:")
         list.groupBy { it.status }.forEach { (status, tasks) ->
             println("  $status: ${tasks.size}")
         }
@@ -154,7 +154,7 @@ suspend fun exampleProfile(apiService: ApiService) {
     // Отпуска
     val vacations = apiService.getVacations()
     vacations.onSuccess { list ->
-        println("\n🏖️ Отпуска (${list.size}):")
+        println("\n[VACATION] Отпуска (${list.size}):")
         list.forEach { vac ->
             println("  ${vac.startDate} - ${vac.endDate} (${vac.daysCount} дней)")
             println("  Статус: ${vac.status}")
@@ -164,9 +164,9 @@ suspend fun exampleProfile(apiService: ApiService) {
     // Курсы
     val courses = apiService.getCourses()
     courses.onSuccess { list ->
-        println("\n📚 Курсы (${list.size}):")
+        println("\n[COURSE] Курсы (${list.size}):")
         list.forEach { course ->
-            val status = if (course.isCompleted) "✅" else "${course.progress}%"
+            val status = if (course.isCompleted) "[DONE]" else "${course.progress}%"
             println("  $status ${course.title}")
         }
     }
@@ -181,7 +181,7 @@ suspend fun exampleOffice(apiService: ApiService) {
         list.groupBy { it.floor }.forEach { (floor, spaces) ->
             println("\nЭтаж $floor:")
             spaces.forEach { ws ->
-                val status = if (ws.isBooked) "❌ ${ws.bookedBy}" else "✅ Свободно"
+                val status = if (ws.isBooked) "[BOOKED] ${ws.bookedBy}" else "[FREE] Свободно"
                 println("  ${ws.workspaceNumber}: $status")
             }
         }
@@ -201,7 +201,7 @@ suspend fun exampleOffice(apiService: ApiService) {
 suspend fun exampleBirthdays(apiService: ApiService) {
     val result = apiService.getBirthdays()
     result.onSuccess { birthdays ->
-        println("🎂 Ближайшие дни рождения:")
+        println("[BIRTHDAY] Ближайшие дни рождения:")
         birthdays.forEach { birthday ->
             println("  ${birthday.date} - ${birthday.employeeName} (${birthday.department})")
         }

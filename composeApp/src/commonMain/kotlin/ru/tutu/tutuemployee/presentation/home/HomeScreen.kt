@@ -6,6 +6,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -130,12 +132,12 @@ fun SearchBar(
             modifier = Modifier.fillMaxWidth(),
             placeholder = { Text("Поиск сотрудников и отделов") },
             leadingIcon = {
-                Text("🔍")
+                Icon(Icons.Default.Search, contentDescription = "Поиск")
             },
             trailingIcon = {
                 if (query.isNotEmpty()) {
-                    TextButton(onClick = { onQueryChange("") }) {
-                        Text("✕")
+                    IconButton(onClick = { onQueryChange("") }) {
+                        Icon(Icons.Default.Close, contentDescription = "Очистить")
                     }
                 }
             },
@@ -228,11 +230,22 @@ fun BirthdayCard(birthday: Birthday) {
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            Text(
-                text = "🎂 ${birthday.date}",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    Icons.Default.Cake,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    text = birthday.date,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }
@@ -262,8 +275,9 @@ fun NewsCard(news: News, onClick: () -> Unit) {
                     shape = MaterialTheme.shapes.small,
                     color = MaterialTheme.colorScheme.primaryContainer
                 ) {
-                    Text(
-                        text = "📰",
+                    Icon(
+                        Icons.Default.Article,
+                        contentDescription = null,
                         modifier = Modifier.padding(8.dp)
                     )
                 }
@@ -280,11 +294,22 @@ fun NewsCard(news: News, onClick: () -> Unit) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Text(
-                text = "🕒 ${news.publishedAt}",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    Icons.Default.Schedule,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = news.publishedAt,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
         }
     }
 }

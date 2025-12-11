@@ -7,6 +7,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -76,7 +78,7 @@ fun OfficeScreen(
                         TextButton(onClick = { /* Открыть календарь */ }) {
                             Text(uiState.selectedDate)
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("📅")
+                            Icon(Icons.Default.CalendarToday, contentDescription = "Выбрать дату")
                         }
                     }
                 }
@@ -167,10 +169,11 @@ fun WorkspaceItem(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Text(
-                    text = if (workspace.isBooked) "✕" else "✓",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = if (workspace.isBooked) {
+                Icon(
+                    if (workspace.isBooked) Icons.Default.Close else Icons.Default.Check,
+                    contentDescription = if (workspace.isBooked) "Занято" else "Свободно",
+                    modifier = Modifier.size(32.dp),
+                    tint = if (workspace.isBooked) {
                         MaterialTheme.colorScheme.onErrorContainer
                     } else {
                         MaterialTheme.colorScheme.onTertiaryContainer

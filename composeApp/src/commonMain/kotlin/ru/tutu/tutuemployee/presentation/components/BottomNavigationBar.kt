@@ -1,8 +1,11 @@
 package ru.tutu.tutuemployee.presentation.components
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -11,14 +14,14 @@ import kotlin.reflect.KClass
 
 sealed class BottomNavItem(
     val screen: Screen,
-    val icon: String,
+    val icon: ImageVector,
     val label: String
 ) {
-    data object Home : BottomNavItem(Screen.Home, "🏠", "Главная")
-    data object Profile : BottomNavItem(Screen.Profile, "👤", "Профиль")
-    data object Office : BottomNavItem(Screen.Office, "🏢", "Офис")
-    data object Merch : BottomNavItem(Screen.Merch, "🛒", "Мерч")
-    data object Favorites : BottomNavItem(Screen.Favorites, "⭐", "Избранное")
+    data object Home : BottomNavItem(Screen.Home, Icons.Default.Home, "Главная")
+    data object Profile : BottomNavItem(Screen.Profile, Icons.Default.Person, "Профиль")
+    data object Office : BottomNavItem(Screen.Office, Icons.Default.Business, "Офис")
+    data object Merch : BottomNavItem(Screen.Merch, Icons.Default.ShoppingCart, "Мерч")
+    data object Favorites : BottomNavItem(Screen.Favorites, Icons.Default.Star, "Избранное")
 }
 
 @Composable
@@ -41,7 +44,7 @@ fun BottomNavigationBar(
             val isSelected = currentDestination?.hasRoute(item.screen::class) ?: false
 
             NavigationBarItem(
-                icon = { Text(item.icon, style = MaterialTheme.typography.titleLarge) },
+                icon = { Icon(item.icon, contentDescription = item.label) },
                 label = { Text(item.label) },
                 selected = isSelected,
                 onClick = {

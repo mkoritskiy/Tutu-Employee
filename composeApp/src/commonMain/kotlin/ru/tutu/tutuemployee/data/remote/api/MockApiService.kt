@@ -301,21 +301,21 @@ class MockApiService : ApiService {
                 id = "ach_1",
                 title = "Первый год в компании",
                 description = "Поздравляем с первым годом работы в Tutu!",
-                iconUrl = "🎉",
+                iconUrl = "celebration",
                 earnedAt = "2023-06-01T00:00:00Z"
             ),
             AchievementDto(
                 id = "ach_2",
                 title = "Code Review Master",
                 description = "Провел 100+ code review",
-                iconUrl = "👨‍💻",
+                iconUrl = "code",
                 earnedAt = "2023-09-15T00:00:00Z"
             ),
             AchievementDto(
                 id = "ach_3",
                 title = "Наставник",
                 description = "Помог адаптироваться 3 новым сотрудникам",
-                iconUrl = "🎓",
+                iconUrl = "school",
                 earnedAt = "2023-12-01T00:00:00Z"
             )
         )
