@@ -18,6 +18,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import ru.tutu.tutuemployee.domain.model.News
 import ru.tutu.tutuemployee.domain.model.WorkspaceBooking
 import ru.tutu.tutuemployee.presentation.components.BottomNavigationBar
+import ru.tutu.tutuemployee.util.DateFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,7 +77,7 @@ fun OfficeScreen(
                             style = MaterialTheme.typography.titleLarge
                         )
                         TextButton(onClick = { /* Открыть календарь */ }) {
-                            Text(uiState.selectedDate)
+                            Text(DateFormatter.formatIsoDate(uiState.selectedDate))
                             Spacer(modifier = Modifier.width(4.dp))
                             Icon(Icons.Default.CalendarToday, contentDescription = "Выбрать дату")
                         }
@@ -217,7 +218,7 @@ fun OfficeNewsCard(news: News) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = news.publishedAt,
+                text = DateFormatter.formatIsoDateTime(news.publishedAt),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

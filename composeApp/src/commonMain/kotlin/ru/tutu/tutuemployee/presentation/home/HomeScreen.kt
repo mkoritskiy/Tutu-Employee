@@ -22,6 +22,7 @@ import ru.tutu.tutuemployee.domain.model.News
 import ru.tutu.tutuemployee.domain.model.User
 import ru.tutu.tutuemployee.presentation.components.BottomNavigationBar
 import ru.tutu.tutuemployee.ui.theme.TutuEmployeeTheme
+import ru.tutu.tutuemployee.util.DateFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -241,7 +242,7 @@ fun BirthdayCard(birthday: Birthday) {
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = birthday.date,
+                    text = DateFormatter.formatShortDate(birthday.date),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -305,7 +306,7 @@ fun NewsCard(news: News, onClick: () -> Unit) {
                     tint = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = news.publishedAt,
+                    text = DateFormatter.formatIsoDateTime(news.publishedAt),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.primary
                 )

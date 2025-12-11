@@ -6,11 +6,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.datetime.*
 import ru.tutu.tutuemployee.domain.model.News
 import ru.tutu.tutuemployee.domain.model.WorkspaceBooking
 import ru.tutu.tutuemployee.domain.repository.NewsRepository
 import ru.tutu.tutuemployee.domain.repository.OfficeRepository
+import ru.tutu.tutuemployee.util.DateFormatter
 
 data class OfficeUiState(
     val workspaceBookings: List<WorkspaceBooking> = emptyList(),
@@ -29,8 +29,8 @@ class OfficeViewModel(
     val uiState: StateFlow<OfficeUiState> = _uiState.asStateFlow()
 
     init {
-        // Используем текущую дату
-        val today = "2024-12-11" // TODO: использовать реальную текущую дату
+        // Используем текущую дату в формате ISO для API
+        val today = DateFormatter.getCurrentDateIso()
         _uiState.value = _uiState.value.copy(selectedDate = today)
         loadData()
     }

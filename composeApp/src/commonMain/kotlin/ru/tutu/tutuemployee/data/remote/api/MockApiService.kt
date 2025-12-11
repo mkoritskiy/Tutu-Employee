@@ -261,8 +261,8 @@ class MockApiService : ApiService {
             ),
             employment = EmploymentInfo(
                 position = "Senior Android Developer",
-                department = "Мобильная разработка",
-                location = "Москва, ул. Ленина 1",
+                department = "Альфа",
+                location = "Глобус Медиа",
                 startDate = "2020-01-15"
             ),
             roles = listOf("developer", "mentor"),

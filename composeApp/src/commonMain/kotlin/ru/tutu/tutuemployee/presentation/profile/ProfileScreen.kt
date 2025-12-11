@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import org.koin.compose.viewmodel.koinViewModel
 import ru.tutu.tutuemployee.domain.model.*
 import ru.tutu.tutuemployee.presentation.components.BottomNavigationBar
+import ru.tutu.tutuemployee.util.DateFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -234,14 +235,14 @@ fun StatsCard(availableVacationDays: Int, bonusPoints: Int) {
         }
 
         Card(
-            modifier = Modifier.weight(1f).fillMaxWidth(),
+            modifier = Modifier.weight(1f),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.tertiaryContainer
             )
         ) {
             Column(
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(20.dp).fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Icon(
@@ -274,14 +275,13 @@ fun AchievementsSection(achievements: List<Achievement>) {
             Card(
                 modifier = Modifier
                     .width(120.dp)
-                    .height(140.dp)
+                    .height(130.dp)
             ) {
                 Column(
                     modifier = Modifier
                         .padding(12.dp)
                         .fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Icon(
                         Icons.Default.EmojiEvents,
@@ -342,7 +342,7 @@ fun TaskCard(task: Task) {
                 task.dueDate?.let {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "Срок: $it",
+                        text = "Срок: ${DateFormatter.formatIsoDateTime(it)}",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.error
                     )
@@ -371,7 +371,10 @@ fun VacationCard(vacation: Vacation) {
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "${vacation.startDate} - ${vacation.endDate}",
+                    text = "${DateFormatter.formatIsoDate(vacation.startDate)} - ${
+                        DateFormatter.formatIsoDate(
+                            vacation.endDate
+                        )}",
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
