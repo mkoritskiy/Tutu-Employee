@@ -1,5 +1,6 @@
 package ru.tutu.tutuemployee.presentation.auth
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -11,7 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
+import tutuemployee.composeapp.generated.resources.Res
+import tutuemployee.composeapp.generated.resources.ic_auth_logo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,18 +67,17 @@ fun AuthScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    // Логотип (эмоджи)
+                    // Логотип
                     Surface(
                         modifier = Modifier.size(80.dp),
                         shape = CircleShape,
                         color = MaterialTheme.colorScheme.primary
                     ) {
                         Box(contentAlignment = Alignment.Center) {
-                            Icon(
-                                Icons.Default.Train,
+                            Image(
+                                painter = painterResource(Res.drawable.ic_auth_logo),
                                 contentDescription = null,
-                                modifier = Modifier.size(48.dp),
-                                tint = MaterialTheme.colorScheme.onPrimary
+                                modifier = Modifier.size(48.dp)
                             )
                         }
                     }
