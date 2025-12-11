@@ -29,37 +29,6 @@ class AuthRepositoryImpl(
             }
     }
 
-    override suspend fun loginWithKeycloak(
-        username: String,
-        password: String
-    ): Result<Pair<String, User>> {
-        return keycloakClient.loginWithPassword(username, password)
-            .mapCatching { tokens ->
-                // Сохраняем access token в старое хранилище для обратной совместимости
-                tokenStorage.saveToken(tokens.accessToken)
-
-                // Получаем информацию о пользователе
-                val userInfo = keycloakClient.getUserInfo().getOrThrow()
-
-                // Преобразуем в доменную модель
-                val user = User(
-                    id = userInfo.subject,
-                    username = userInfo.preferredUsername ?: userInfo.email ?: userInfo.subject,
-                    email = userInfo.email ?: "",
-                    firstName = userInfo.givenName ?: "",
-                    lastName = userInfo.familyName ?: "",
-                    position = "", // Получать из атрибутов Keycloak или отдельного API
-                    department = "", // Получать из атрибутов Keycloak или отдельного API
-                    legalEntity = "", // Получать из атрибутов Keycloak или отдельного API
-                    avatarUrl = null,
-                    availableVacationDays = 0,
-                    bonusPoints = 0
-                )
-
-                Pair(tokens.accessToken, user)
-            }
-    }
-
     override suspend fun createKeycloakAuthUrl(): Result<String> {
         return try {
             val url = keycloakOAuthHandler.createAuthorizationUrl()

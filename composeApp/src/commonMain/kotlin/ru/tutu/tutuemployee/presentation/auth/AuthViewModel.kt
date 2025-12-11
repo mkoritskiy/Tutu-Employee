@@ -10,7 +10,6 @@ import ru.tutu.tutuemployee.domain.model.User
 import ru.tutu.tutuemployee.domain.usecase.auth.GetKeycloakAuthUrlUseCase
 import ru.tutu.tutuemployee.domain.usecase.auth.HandleKeycloakCallbackUseCase
 import ru.tutu.tutuemployee.domain.usecase.auth.LoginUseCase
-import ru.tutu.tutuemployee.domain.usecase.auth.LoginWithKeycloakUseCase
 
 data class AuthUiState(
     val username: String = "",
@@ -24,7 +23,6 @@ data class AuthUiState(
 
 class AuthViewModel(
     private val loginUseCase: LoginUseCase,
-    private val loginWithKeycloakUseCase: LoginWithKeycloakUseCase,
     private val getKeycloakAuthUrlUseCase: GetKeycloakAuthUrlUseCase,
     private val handleKeycloakCallbackUseCase: HandleKeycloakCallbackUseCase
 ) : ViewModel() {
@@ -66,38 +64,6 @@ class AuthViewModel(
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
                         error = exception.message ?: "Login failed"
-                    )
-                }
-        }
-    }
-
-    /**
-     * Вход через Keycloak (username/password)
-     * Примечание: Не рекомендуется для production, используйте OAuth flow
-     */
-    fun loginWithKeycloak() {
-        val state = _uiState.value
-        if (state.username.isBlank() || state.password.isBlank()) {
-            _uiState.value = state.copy(error = "Заполните все поля")
-            return
-        }
-
-        viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
-
-            loginWithKeycloakUseCase(state.username, state.password)
-                .onSuccess { (token, user) ->
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        isAuthenticated = true,
-                        user = user,
-                        error = null
-                    )
-                }
-                .onFailure { exception ->
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        error = exception.message ?: "Ошибка входа через Keycloak"
                     )
                 }
         }
@@ -151,10 +117,6 @@ class AuthViewModel(
                     )
                 }
         }
-    }
-
-    fun resetAuthState() {
-        _uiState.value = _uiState.value.copy(isAuthenticated = false, keycloakAuthUrl = null)
     }
 
     fun clearKeycloakAuthUrl() {

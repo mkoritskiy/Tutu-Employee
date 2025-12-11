@@ -12,11 +12,6 @@ interface AuthRepository {
     suspend fun login(username: String, password: String): Result<Pair<String, User>>
 
     /**
-     * Авторизация через Keycloak (OAuth2/OIDC)
-     */
-    suspend fun loginWithKeycloak(username: String, password: String): Result<Pair<String, User>>
-
-    /**
      * Создать URL для OAuth авторизации
      */
     suspend fun createKeycloakAuthUrl(): Result<String>

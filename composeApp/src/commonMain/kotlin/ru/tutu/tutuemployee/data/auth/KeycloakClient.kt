@@ -19,32 +19,6 @@ class KeycloakClient(
     private val refreshMutex = Mutex()
 
     /**
-     * Получить токен по username и password (Resource Owner Password Credentials Flow)
-     * Не рекомендуется для production, используйте Authorization Code Flow
-     */
-    suspend fun loginWithPassword(username: String, password: String): Result<KeycloakTokens> {
-        return try {
-            val response = httpClient.submitForm(
-                url = config.tokenEndpoint,
-                formParameters = parameters {
-                    append("grant_type", "password")
-                    append("client_id", config.clientId)
-                    config.clientSecret?.let { append("client_secret", it) }
-                    append("username", username)
-                    append("password", password)
-                    append("scope", "openid profile email")
-                }
-            ).body<TokenResponse>()
-
-            val tokens = response.toKeycloakTokens()
-            tokenStorage.saveTokens(tokens)
-            Result.success(tokens)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    /**
      * Обмен authorization code на токен (Authorization Code Flow)
      * Используется после редиректа с Keycloak
      */

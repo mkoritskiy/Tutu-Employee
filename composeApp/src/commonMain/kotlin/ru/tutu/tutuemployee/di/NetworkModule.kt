@@ -21,13 +21,6 @@ import ru.tutu.tutuemployee.data.repository.InMemoryTokenStorage
 import ru.tutu.tutuemployee.data.repository.TokenStorage
 
 /**
- * Флаг для включения авторизации через Keycloak
- * true - использовать Keycloak
- * false - использовать простую авторизацию
- */
-const val USE_KEYCLOAK = true
-
-/**
  * DI модуль для сетевых компонентов
  */
 val networkModule = module {

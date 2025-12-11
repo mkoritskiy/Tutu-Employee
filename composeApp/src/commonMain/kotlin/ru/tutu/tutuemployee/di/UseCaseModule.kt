@@ -18,7 +18,6 @@ val useCaseModule = module {
     // Auth Use Cases
     factoryOf(::LoginUseCase)
     factoryOf(::GetCurrentUserUseCase)
-    factoryOf(::LoginWithKeycloakUseCase)
     factoryOf(::GetKeycloakAuthUrlUseCase)
     factoryOf(::HandleKeycloakCallbackUseCase)
 

@@ -64,16 +64,3 @@ sealed class DomainException(
         override val cause: Throwable? = null
     ) : DomainException(message, cause)
 }
-
-/**
- * Extension для конвертации Throwable в DomainException
- */
-fun Throwable.toDomainException(): DomainException {
-    return when (this) {
-        is DomainException -> this
-        else -> DomainException.UnknownException(
-            message = this.message ?: "Unknown error",
-            cause = this
-        )
-    }
-}
