@@ -42,7 +42,7 @@ fun MerchScreen(
             TopAppBar(
                 title = {
                     Text(
-                        "Магазин мерча",
+                        "Туту шоп",
                         style = MaterialTheme.typography.headlineSmall
                     )
                 },
@@ -197,6 +197,7 @@ fun MerchItemCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .height(280.dp)
             .clickable(onClick = onClick)
     ) {
         Column(
