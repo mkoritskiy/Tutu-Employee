@@ -85,7 +85,7 @@ fun AuthScreen(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = "Tutu Employee",
+                        text = "Туту Сотрудник",
                         style = MaterialTheme.typography.headlineLarge,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -157,28 +157,6 @@ fun AuthScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Кнопка OAuth через Keycloak (с паролем - не рекомендуется)
-                    OutlinedButton(
-                        onClick = { viewModel.loginWithKeycloak() },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp),
-                        enabled = !uiState.isLoading && uiState.username.isNotEmpty() && uiState.password.isNotEmpty()
-                    ) {
-                        Icon(
-                            Icons.Default.Security,
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            "Войти через Keycloak (пароль)",
-                            style = MaterialTheme.typography.titleSmall
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
                     // Кнопка OAuth через браузер (рекомендуемый способ)
                     Button(
                         onClick = { viewModel.startKeycloakOAuth() },
@@ -198,8 +176,6 @@ fun AuthScreen(
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Войти через браузер (OAuth)", style = MaterialTheme.typography.titleSmall)
                     }
-
-                    Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
                         text = "Используйте учетные данные Keycloak",
