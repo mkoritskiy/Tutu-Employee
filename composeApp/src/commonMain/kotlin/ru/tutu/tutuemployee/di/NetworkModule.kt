@@ -15,15 +15,10 @@ import ru.tutu.tutuemployee.data.auth.*
 import ru.tutu.tutuemployee.data.remote.api.ApiService
 import ru.tutu.tutuemployee.data.remote.api.ApiServiceImpl
 import ru.tutu.tutuemployee.data.remote.api.MockApiService
+import ru.tutu.tutuemployee.data.repository.ApiConfigRepository
+import ru.tutu.tutuemployee.data.repository.ApiConfigRepositoryImpl
 import ru.tutu.tutuemployee.data.repository.InMemoryTokenStorage
 import ru.tutu.tutuemployee.data.repository.TokenStorage
-
-/**
- * Флаг для переключения между реальным и мок API
- * true - использовать мок данные
- * false - использовать реальный API
- */
-const val USE_MOCK_API = true
 
 /**
  * Флаг для включения авторизации через Keycloak
@@ -141,7 +136,7 @@ val networkModule = module {
             }
 
             install(DefaultRequest) {
-                url("https://api.tutu.ru/employee") // Замените на реальный URL
+                url("https://portal-service.hackaton2025-dv.svc.k8s.tutu.ru") // Реальный API URL
             }
 
             install(HttpTimeout) {
@@ -152,12 +147,76 @@ val networkModule = module {
         }
     }
 
-    // API Service - выбираем между моком и реальным API
+    // API Config Repository
+    single<ApiConfigRepository> {
+        ApiConfigRepositoryImpl()
+    }
+
+    // API Service - динамический выбор между моком и реальным API
     single<ApiService> {
-        if (USE_MOCK_API) {
-            MockApiService()
+        val apiConfigRepository: ApiConfigRepository = get()
+        val httpClient: HttpClient = get(qualifier = org.koin.core.qualifier.named("api"))
+
+        ApiServiceFactory(
+            apiConfigRepository = apiConfigRepository,
+            httpClient = httpClient
+        )
+    }
+}
+
+/**
+ * Фабрика для создания ApiService, которая динамически переключается между моком и реальным API
+ */
+private class ApiServiceFactory(
+    private val apiConfigRepository: ApiConfigRepository,
+    private val httpClient: HttpClient
+) : ApiService {
+    private val mockService = MockApiService()
+    private val realService = ApiServiceImpl(httpClient)
+
+    private fun getService(): ApiService {
+        return if (apiConfigRepository.useMockApi.value) {
+            mockService
         } else {
-            ApiServiceImpl(get(qualifier = org.koin.core.qualifier.named("api")))
+            realService
         }
     }
+
+    override suspend fun login(username: String, password: String) =
+        getService().login(username, password)
+
+    override suspend fun getUser(id: String) = getService().getUser(id)
+    override suspend fun getNewsList(
+        limit: Int?,
+        offset: Int?,
+        category: String?,
+        search: String?
+    ) =
+        getService().getNewsList(limit, offset, category, search)
+
+    override suspend fun getNewsItem(id: String) = getService().getNewsItem(id)
+    override suspend fun searchEmployeesByLastName(lastName: String, limit: Int?, offset: Int?) =
+        getService().searchEmployeesByLastName(lastName, limit, offset)
+
+    override suspend fun getVacations(employeeId: String, year: Int?) =
+        getService().getVacations(employeeId, year)
+
+    override suspend fun getFavorites(userId: String) = getService().getFavorites(userId)
+    override suspend fun addFavorite(request: ru.tutu.tutuemployee.data.remote.dto.AddFavoriteRequest) =
+        getService().addFavorite(request)
+
+    override suspend fun deleteFavorite(id: String) = getService().deleteFavorite(id)
+    override suspend fun getAchievements(userId: String) = getService().getAchievements(userId)
+    override suspend fun getCurrentUser() = getService().getCurrentUser()
+    override suspend fun getNews() = getService().getNews()
+    override suspend fun searchEmployees(query: String) = getService().searchEmployees(query)
+    override suspend fun getBirthdays() = getService().getBirthdays()
+    override suspend fun getTasks() = getService().getTasks()
+    override suspend fun getCourses() = getService().getCourses()
+    override suspend fun getWorkspaceBookings(date: String) =
+        getService().getWorkspaceBookings(date)
+
+    override suspend fun getOfficeNews() = getService().getOfficeNews()
+    override suspend fun getMerchItems() = getService().getMerchItems()
+    override suspend fun purchaseMerchItem(itemId: String) = getService().purchaseMerchItem(itemId)
 }

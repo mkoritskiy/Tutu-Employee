@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import ru.tutu.tutuemployee.data.repository.ApiConfigRepository
 import ru.tutu.tutuemployee.domain.model.Birthday
 import ru.tutu.tutuemployee.domain.model.News
 import ru.tutu.tutuemployee.domain.model.User
@@ -19,20 +21,29 @@ data class HomeUiState(
     val searchResults: List<User> = emptyList(),
     val searchQuery: String = "",
     val isLoading: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val isUsingMockApi: Boolean = true
 )
 
 class HomeViewModel(
     private val getNewsUseCase: GetNewsUseCase,
     private val getBirthdaysUseCase: GetBirthdaysUseCase,
-    private val searchEmployeesUseCase: SearchEmployeesUseCase
+    private val searchEmployeesUseCase: SearchEmployeesUseCase,
+    private val apiConfigRepository: ApiConfigRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
-        loadData()
+        // Подписываемся на изменения режима API
+        viewModelScope.launch {
+            apiConfigRepository.useMockApi.collectLatest { useMock ->
+                _uiState.value = _uiState.value.copy(isUsingMockApi = useMock)
+                // Перезагружаем данные при смене режима
+                loadData()
+            }
+        }
     }
 
     private fun loadData() {
@@ -74,5 +85,9 @@ class HomeViewModel(
 
     fun refresh() {
         loadData()
+    }
+
+    fun toggleApiMode() {
+        apiConfigRepository.toggleApiMode()
     }
 }

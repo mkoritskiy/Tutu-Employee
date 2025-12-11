@@ -413,9 +413,9 @@ class HomeViewModelTest {
 
 ---
 
-**Версия**: 2.1.0 (Clean Architecture + Material3 UI)  
+**Версия**: 2.2.0 (Clean Architecture + Material3 UI + WebView + Date Formatting)  
 **Статус**: ✅ Production Ready  
-**Последнее обновление**: Декабрь 2025
+**Последнее обновление**: 11 Декабря 2024
 
 ## 🔗 Полезные ссылки
 

@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Article
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +44,30 @@ fun HomeScreen(
                         style = MaterialTheme.typography.headlineSmall
                     )
                 },
+                actions = {
+                    // Кнопка переключения между моками и реальным API
+                    IconButton(
+                        onClick = { viewModel.toggleApiMode() }
+                    ) {
+                        Icon(
+                            imageVector = if (uiState.isUsingMockApi) {
+                                Icons.Default.CloudOff
+                            } else {
+                                Icons.Default.Cloud
+                            },
+                            contentDescription = if (uiState.isUsingMockApi) {
+                                "Используются моки (переключить на реальный API)"
+                            } else {
+                                "Используется реальный API (переключить на моки)"
+                            },
+                            tint = if (uiState.isUsingMockApi) {
+                                MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                            } else {
+                                MaterialTheme.colorScheme.onPrimaryContainer
+                            }
+                        )
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -60,6 +85,53 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+            // Индикатор режима API
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                color = if (uiState.isUsingMockApi) {
+                    MaterialTheme.colorScheme.secondaryContainer
+                } else {
+                    MaterialTheme.colorScheme.primaryContainer
+                },
+                shape = MaterialTheme.shapes.small
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = if (uiState.isUsingMockApi) {
+                            Icons.Default.CloudOff
+                        } else {
+                            Icons.Default.Cloud
+                        },
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                        tint = if (uiState.isUsingMockApi) {
+                            MaterialTheme.colorScheme.onSecondaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.onPrimaryContainer
+                        }
+                    )
+                    Text(
+                        text = if (uiState.isUsingMockApi) {
+                            "Режим: Тестовые данные (моки)"
+                        } else {
+                            "Режим: Реальный API"
+                        },
+                        style = MaterialTheme.typography.labelMedium,
+                        color = if (uiState.isUsingMockApi) {
+                            MaterialTheme.colorScheme.onSecondaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.onPrimaryContainer
+                        }
+                    )
+                }
+            }
+
             // Поиск
             SearchBar(
                 query = uiState.searchQuery,
@@ -67,7 +139,7 @@ fun HomeScreen(
                 searchResults = uiState.searchResults,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(horizontal = 16.dp)
             )
 
             if (uiState.isLoading) {
