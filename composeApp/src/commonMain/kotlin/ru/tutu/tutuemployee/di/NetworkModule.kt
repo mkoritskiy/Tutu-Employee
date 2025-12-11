@@ -12,8 +12,17 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import ru.tutu.tutuemployee.data.remote.api.ApiService
+import ru.tutu.tutuemployee.data.remote.api.ApiServiceImpl
+import ru.tutu.tutuemployee.data.remote.api.MockApiService
 import ru.tutu.tutuemployee.data.repository.InMemoryTokenStorage
 import ru.tutu.tutuemployee.data.repository.TokenStorage
+
+/**
+ * Флаг для переключения между реальным и мок API
+ * true - использовать мок данные
+ * false - использовать реальный API
+ */
+const val USE_MOCK_API = true
 
 /**
  * DI модуль для сетевых компонентов
@@ -22,7 +31,7 @@ val networkModule = module {
     // Token Storage
     single<TokenStorage> { InMemoryTokenStorage() }
 
-    // HTTP Client
+    // HTTP Client (только для реального API)
     single {
         HttpClient {
             install(ContentNegotiation) {
@@ -60,6 +69,12 @@ val networkModule = module {
         }
     }
 
-    // API Service
-    single { ApiService(get()) }
+    // API Service - выбираем между моком и реальным API
+    single<ApiService> {
+        if (USE_MOCK_API) {
+            MockApiService()
+        } else {
+            ApiServiceImpl(get())
+        }
+    }
 }

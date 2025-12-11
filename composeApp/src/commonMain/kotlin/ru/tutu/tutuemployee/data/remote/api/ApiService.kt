@@ -7,13 +7,35 @@ import io.ktor.http.*
 import ru.tutu.tutuemployee.data.remote.dto.*
 
 /**
- * API Service для работы с backend
+ * Интерфейс API Service для работы с backend
  */
-class ApiService(
+interface ApiService {
+    suspend fun login(username: String, password: String): Result<AuthResponse>
+    suspend fun getCurrentUser(): Result<UserDto>
+    suspend fun getNews(): Result<List<NewsDto>>
+    suspend fun getBirthdays(): Result<List<BirthdayDto>>
+    suspend fun searchEmployees(query: String): Result<List<UserDto>>
+    suspend fun getAchievements(): Result<List<AchievementDto>>
+    suspend fun getTasks(): Result<List<TaskDto>>
+    suspend fun getVacations(): Result<List<VacationDto>>
+    suspend fun getCourses(): Result<List<CourseDto>>
+    suspend fun getWorkspaceBookings(date: String): Result<List<WorkspaceBookingDto>>
+    suspend fun getOfficeNews(): Result<List<NewsDto>>
+    suspend fun getMerchItems(): Result<List<MerchItemDto>>
+    suspend fun purchaseMerchItem(itemId: String): Result<Unit>
+    suspend fun getFavorites(): Result<List<FavoriteCardDto>>
+    suspend fun addFavorite(title: String, url: String): Result<FavoriteCardDto>
+    suspend fun deleteFavorite(id: String): Result<Unit>
+}
+
+/**
+ * Реальная реализация API Service с HTTP запросами
+ */
+class ApiServiceImpl(
     private val httpClient: HttpClient
-) {
+) : ApiService {
     // Авторизация
-    suspend fun login(username: String, password: String): Result<AuthResponse> {
+    override suspend fun login(username: String, password: String): Result<AuthResponse> {
         return try {
             val response = httpClient.post("/auth/login") {
                 contentType(ContentType.Application.Json)
@@ -26,7 +48,7 @@ class ApiService(
     }
 
     // Получение текущего пользователя
-    suspend fun getCurrentUser(): Result<UserDto> {
+    override suspend fun getCurrentUser(): Result<UserDto> {
         return try {
             val response = httpClient.get("/user/me")
             Result.success(response.body<UserDto>())
@@ -36,7 +58,7 @@ class ApiService(
     }
 
     // Главная страница
-    suspend fun getNews(): Result<List<NewsDto>> {
+    override suspend fun getNews(): Result<List<NewsDto>> {
         return try {
             val response = httpClient.get("/news")
             Result.success(response.body<List<NewsDto>>())
@@ -45,7 +67,7 @@ class ApiService(
         }
     }
 
-    suspend fun getBirthdays(): Result<List<BirthdayDto>> {
+    override suspend fun getBirthdays(): Result<List<BirthdayDto>> {
         return try {
             val response = httpClient.get("/birthdays")
             Result.success(response.body<List<BirthdayDto>>())
@@ -54,7 +76,7 @@ class ApiService(
         }
     }
 
-    suspend fun searchEmployees(query: String): Result<List<UserDto>> {
+    override suspend fun searchEmployees(query: String): Result<List<UserDto>> {
         return try {
             val response = httpClient.get("/search/employees") {
                 parameter("q", query)
@@ -66,7 +88,7 @@ class ApiService(
     }
 
     // Профиль
-    suspend fun getAchievements(): Result<List<AchievementDto>> {
+    override suspend fun getAchievements(): Result<List<AchievementDto>> {
         return try {
             val response = httpClient.get("/profile/achievements")
             Result.success(response.body<List<AchievementDto>>())
@@ -75,7 +97,7 @@ class ApiService(
         }
     }
 
-    suspend fun getTasks(): Result<List<TaskDto>> {
+    override suspend fun getTasks(): Result<List<TaskDto>> {
         return try {
             val response = httpClient.get("/profile/tasks")
             Result.success(response.body<List<TaskDto>>())
@@ -84,7 +106,7 @@ class ApiService(
         }
     }
 
-    suspend fun getVacations(): Result<List<VacationDto>> {
+    override suspend fun getVacations(): Result<List<VacationDto>> {
         return try {
             val response = httpClient.get("/profile/vacations")
             Result.success(response.body<List<VacationDto>>())
@@ -93,7 +115,7 @@ class ApiService(
         }
     }
 
-    suspend fun getCourses(): Result<List<CourseDto>> {
+    override suspend fun getCourses(): Result<List<CourseDto>> {
         return try {
             val response = httpClient.get("/profile/courses")
             Result.success(response.body<List<CourseDto>>())
@@ -103,7 +125,7 @@ class ApiService(
     }
 
     // Офис
-    suspend fun getWorkspaceBookings(date: String): Result<List<WorkspaceBookingDto>> {
+    override suspend fun getWorkspaceBookings(date: String): Result<List<WorkspaceBookingDto>> {
         return try {
             val response = httpClient.get("/office/workspaces") {
                 parameter("date", date)
@@ -114,7 +136,7 @@ class ApiService(
         }
     }
 
-    suspend fun getOfficeNews(): Result<List<NewsDto>> {
+    override suspend fun getOfficeNews(): Result<List<NewsDto>> {
         return try {
             val response = httpClient.get("/office/news")
             Result.success(response.body<List<NewsDto>>())
@@ -124,7 +146,7 @@ class ApiService(
     }
 
     // Магазин мерча
-    suspend fun getMerchItems(): Result<List<MerchItemDto>> {
+    override suspend fun getMerchItems(): Result<List<MerchItemDto>> {
         return try {
             val response = httpClient.get("/merch")
             Result.success(response.body<List<MerchItemDto>>())
@@ -133,7 +155,7 @@ class ApiService(
         }
     }
 
-    suspend fun purchaseMerchItem(itemId: String): Result<Unit> {
+    override suspend fun purchaseMerchItem(itemId: String): Result<Unit> {
         return try {
             httpClient.post("/merch/$itemId/purchase")
             Result.success(Unit)
@@ -143,7 +165,7 @@ class ApiService(
     }
 
     // Избранное
-    suspend fun getFavorites(): Result<List<FavoriteCardDto>> {
+    override suspend fun getFavorites(): Result<List<FavoriteCardDto>> {
         return try {
             val response = httpClient.get("/favorites")
             Result.success(response.body<List<FavoriteCardDto>>())
@@ -152,7 +174,7 @@ class ApiService(
         }
     }
 
-    suspend fun addFavorite(title: String, url: String): Result<FavoriteCardDto> {
+    override suspend fun addFavorite(title: String, url: String): Result<FavoriteCardDto> {
         return try {
             val response = httpClient.post("/favorites") {
                 contentType(ContentType.Application.Json)
@@ -164,7 +186,7 @@ class ApiService(
         }
     }
 
-    suspend fun deleteFavorite(id: String): Result<Unit> {
+    override suspend fun deleteFavorite(id: String): Result<Unit> {
         return try {
             httpClient.delete("/favorites/$id")
             Result.success(Unit)
