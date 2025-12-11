@@ -155,8 +155,6 @@ fun AuthScreen(
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(8.dp))
-
                     // Кнопка OAuth через браузер (рекомендуемый способ)
                     Button(
                         onClick = { viewModel.startKeycloakOAuth() },

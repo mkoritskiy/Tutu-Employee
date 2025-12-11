@@ -11,7 +11,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.koin.compose.viewmodel.koinViewModel
 import ru.tutu.tutuemployee.domain.model.*
 import ru.tutu.tutuemployee.presentation.components.BottomNavigationBar
@@ -209,7 +211,7 @@ fun StatsCard(availableVacationDays: Int, bonusPoints: Int) {
             )
         ) {
             Column(
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(20.dp).fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Icon(
@@ -232,7 +234,7 @@ fun StatsCard(availableVacationDays: Int, bonusPoints: Int) {
         }
 
         Card(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f).fillMaxWidth(),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.tertiaryContainer
@@ -270,11 +272,16 @@ fun AchievementsSection(achievements: List<Achievement>) {
     ) {
         items(achievements) { achievement ->
             Card(
-                modifier = Modifier.width(120.dp)
+                modifier = Modifier
+                    .width(120.dp)
+                    .height(140.dp)
             ) {
                 Column(
-                    modifier = Modifier.padding(12.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier
+                        .padding(12.dp)
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
                     Icon(
                         Icons.Default.EmojiEvents,
@@ -286,6 +293,7 @@ fun AchievementsSection(achievements: List<Achievement>) {
                     Text(
                         text = achievement.title,
                         style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.Bold,
                         maxLines = 2
                     )
                 }
@@ -322,14 +330,17 @@ fun TaskCard(task: Task) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = task.title,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge.copy(lineHeight = 20.sp),
+                    fontWeight = FontWeight.Bold
                 )
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = task.description,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 task.dueDate?.let {
+                    Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = "Срок: $it",
                         style = MaterialTheme.typography.bodySmall,

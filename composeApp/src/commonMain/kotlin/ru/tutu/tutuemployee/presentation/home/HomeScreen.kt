@@ -269,7 +269,7 @@ fun NewsCard(news: News, onClick: () -> Unit) {
                 Text(
                     text = news.title,
                     style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f).padding(end = 16.dp)
                 )
                 Surface(
                     shape = MaterialTheme.shapes.small,
@@ -287,7 +287,7 @@ fun NewsCard(news: News, onClick: () -> Unit) {
 
             Text(
                 text = news.content,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodyMedium,
                 maxLines = 3,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

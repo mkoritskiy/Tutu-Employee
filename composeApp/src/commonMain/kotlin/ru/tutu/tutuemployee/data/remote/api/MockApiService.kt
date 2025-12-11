@@ -286,7 +286,7 @@ class MockApiService : ApiService {
             ),
             NewsPreviewDto(
                 id = "news_2",
-                title = "Tutu Tech Day 2024",
+                title = "Tutu Tech Day 2025",
                 previewText = "Приглашаем всех на ежегодную техническую конференцию...",
                 imageUrl = "https://picsum.photos/400/300?random=2",
                 publishedAt = "2024-01-14T14:00:00Z"
@@ -481,7 +481,7 @@ class MockApiService : ApiService {
             ),
             NewsDto(
                 id = "news_2",
-                title = "Tutu Tech Day 2024",
+                title = "Tutu Tech Day 2025",
                 content = "Приглашаем всех на ежегодную техническую конференцию! Доклады, workshops и networking.",
                 imageUrl = "https://picsum.photos/400/300?random=2",
                 publishedAt = "2024-01-14T14:00:00Z",
