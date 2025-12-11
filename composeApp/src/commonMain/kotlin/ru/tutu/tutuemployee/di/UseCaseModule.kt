@@ -2,8 +2,7 @@ package ru.tutu.tutuemployee.di
 
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
-import ru.tutu.tutuemployee.domain.usecase.auth.GetCurrentUserUseCase
-import ru.tutu.tutuemployee.domain.usecase.auth.LoginUseCase
+import ru.tutu.tutuemployee.domain.usecase.auth.*
 import ru.tutu.tutuemployee.domain.usecase.employee.GetBirthdaysUseCase
 import ru.tutu.tutuemployee.domain.usecase.employee.SearchEmployeesUseCase
 import ru.tutu.tutuemployee.domain.usecase.news.GetNewsUseCase
@@ -19,6 +18,9 @@ val useCaseModule = module {
     // Auth Use Cases
     factoryOf(::LoginUseCase)
     factoryOf(::GetCurrentUserUseCase)
+    factoryOf(::LoginWithKeycloakUseCase)
+    factoryOf(::GetKeycloakAuthUrlUseCase)
+    factoryOf(::HandleKeycloakCallbackUseCase)
 
     // News Use Cases
     factoryOf(::GetNewsUseCase)

@@ -7,7 +7,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.tutu.tutuemployee.domain.model.User
+import ru.tutu.tutuemployee.domain.usecase.auth.GetKeycloakAuthUrlUseCase
+import ru.tutu.tutuemployee.domain.usecase.auth.HandleKeycloakCallbackUseCase
 import ru.tutu.tutuemployee.domain.usecase.auth.LoginUseCase
+import ru.tutu.tutuemployee.domain.usecase.auth.LoginWithKeycloakUseCase
 
 data class AuthUiState(
     val username: String = "",
@@ -15,11 +18,15 @@ data class AuthUiState(
     val isLoading: Boolean = false,
     val error: String? = null,
     val isAuthenticated: Boolean = false,
-    val user: User? = null
+    val user: User? = null,
+    val keycloakAuthUrl: String? = null
 )
 
 class AuthViewModel(
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val loginWithKeycloakUseCase: LoginWithKeycloakUseCase,
+    private val getKeycloakAuthUrlUseCase: GetKeycloakAuthUrlUseCase,
+    private val handleKeycloakCallbackUseCase: HandleKeycloakCallbackUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AuthUiState())
@@ -33,6 +40,9 @@ class AuthViewModel(
         _uiState.value = _uiState.value.copy(password = password, error = null)
     }
 
+    /**
+     * Обычный вход (legacy)
+     */
     fun login() {
         val state = _uiState.value
         if (state.username.isBlank() || state.password.isBlank()) {
@@ -61,7 +71,93 @@ class AuthViewModel(
         }
     }
 
+    /**
+     * Вход через Keycloak (username/password)
+     * Примечание: Не рекомендуется для production, используйте OAuth flow
+     */
+    fun loginWithKeycloak() {
+        val state = _uiState.value
+        if (state.username.isBlank() || state.password.isBlank()) {
+            _uiState.value = state.copy(error = "Заполните все поля")
+            return
+        }
+
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+
+            loginWithKeycloakUseCase(state.username, state.password)
+                .onSuccess { (token, user) ->
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        isAuthenticated = true,
+                        user = user,
+                        error = null
+                    )
+                }
+                .onFailure { exception ->
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = exception.message ?: "Ошибка входа через Keycloak"
+                    )
+                }
+        }
+    }
+
+    /**
+     * Получить URL для OAuth авторизации через Keycloak
+     */
+    fun startKeycloakOAuth() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+
+            getKeycloakAuthUrlUseCase()
+                .onSuccess { url ->
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        keycloakAuthUrl = url,
+                        error = null
+                    )
+                }
+                .onFailure { exception ->
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = exception.message ?: "Ошибка инициализации OAuth"
+                    )
+                }
+        }
+    }
+
+    /**
+     * Обработать callback от Keycloak
+     */
+    fun handleKeycloakCallback(callbackUrl: String) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+
+            handleKeycloakCallbackUseCase(callbackUrl)
+                .onSuccess { (token, user) ->
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        isAuthenticated = true,
+                        user = user,
+                        keycloakAuthUrl = null,
+                        error = null
+                    )
+                }
+                .onFailure { exception ->
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = exception.message ?: "Ошибка авторизации"
+                    )
+                }
+        }
+    }
+
     fun resetAuthState() {
-        _uiState.value = _uiState.value.copy(isAuthenticated = false)
+        _uiState.value = _uiState.value.copy(isAuthenticated = false, keycloakAuthUrl = null)
+    }
+
+    fun clearKeycloakAuthUrl() {
+        _uiState.value = _uiState.value.copy(keycloakAuthUrl = null)
     }
 }

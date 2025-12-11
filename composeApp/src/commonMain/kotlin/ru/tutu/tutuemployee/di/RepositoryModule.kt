@@ -10,7 +10,14 @@ import ru.tutu.tutuemployee.domain.repository.*
  * DI модуль для репозиториев
  */
 val repositoryModule = module {
-    singleOf(::AuthRepositoryImpl) bind AuthRepository::class
+    single<AuthRepository> {
+        AuthRepositoryImpl(
+            remoteDataSource = get(),
+            tokenStorage = get(),
+            keycloakClient = get(),
+            keycloakOAuthHandler = get()
+        )
+    }
     singleOf(::NewsRepositoryImpl) bind NewsRepository::class
     singleOf(::EmployeeRepositoryImpl) bind EmployeeRepository::class
     singleOf(::ProfileRepositoryImpl) bind ProfileRepository::class

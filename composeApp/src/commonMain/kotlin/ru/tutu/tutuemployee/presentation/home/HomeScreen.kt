@@ -130,7 +130,7 @@ fun SearchBar(
             value = query,
             onValueChange = onQueryChange,
             modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text("Поиск сотрудников и отделов") },
+            placeholder = { Text("Поиск сотрудников") },
             leadingIcon = {
                 Icon(Icons.Default.Search, contentDescription = "Поиск")
             },

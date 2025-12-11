@@ -11,7 +11,7 @@ fun App() {
     KoinContext {
         TutuEmployeeTheme {
             NavigationHost(
-                startDestination = Screen.Home
+                startDestination = Screen.Auth
             )
         }
     }
