@@ -11,11 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
 import ru.tutu.tutuemployee.domain.model.FavoriteCard
+import ru.tutu.tutuemployee.presentation.components.BottomNavigationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoritesScreen(
-    navController: Any, // Временно используем Any вместо NavHostController
+    navController: androidx.navigation.NavHostController,
     onNavigateToWebView: (String, String) -> Unit,
     viewModel: FavoritesViewModel = koinViewModel()
 ) {
@@ -25,6 +26,11 @@ fun FavoritesScreen(
         topBar = {
             TopAppBar(
                 title = { Text("Избранное") }
+            )
+        },
+        bottomBar = {
+            BottomNavigationBar(
+                navController = navController
             )
         },
         floatingActionButton = {

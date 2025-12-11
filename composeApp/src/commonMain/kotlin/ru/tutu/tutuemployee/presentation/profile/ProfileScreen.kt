@@ -17,7 +17,7 @@ import ru.tutu.tutuemployee.presentation.components.BottomNavigationBar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    navController: Any, // Temporary workaround
+    navController: androidx.navigation.NavHostController,
     viewModel: ProfileViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -30,8 +30,7 @@ fun ProfileScreen(
         },
         bottomBar = {
             BottomNavigationBar(
-                navController = navController,
-                currentRoute = "profile"
+                navController = navController
             )
         }
     ) { paddingValues ->

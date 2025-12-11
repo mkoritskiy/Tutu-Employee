@@ -66,8 +66,7 @@ fun MerchScreen(
         },
         bottomBar = {
             BottomNavigationBar(
-                navController = navController,
-                currentRoute = "merch"
+                navController = navController
             )
         },
         snackbarHost = {

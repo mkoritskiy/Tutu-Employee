@@ -20,7 +20,7 @@ import ru.tutu.tutuemployee.presentation.components.BottomNavigationBar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OfficeScreen(
-    navController: Any, // Temporary workaround
+    navController: androidx.navigation.NavHostController,
     onNavigateToWebView: (String, String) -> Unit,
     viewModel: OfficeViewModel = koinViewModel()
 ) {
@@ -34,8 +34,7 @@ fun OfficeScreen(
         },
         bottomBar = {
             BottomNavigationBar(
-                navController = navController,
-                currentRoute = "office"
+                navController = navController
             )
         }
     ) { paddingValues ->
