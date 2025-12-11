@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Article
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -277,7 +278,7 @@ fun NewsCard(news: News, onClick: () -> Unit) {
                     color = MaterialTheme.colorScheme.primaryContainer
                 ) {
                     Icon(
-                        Icons.Default.Article,
+                        Icons.AutoMirrored.Filled.Article,
                         contentDescription = null,
                         modifier = Modifier.padding(8.dp)
                     )

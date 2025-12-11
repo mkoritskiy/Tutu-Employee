@@ -20,7 +20,7 @@ sealed class BottomNavItem(
     data object Home : BottomNavItem(Screen.Home, Icons.Default.Home, "Главная")
     data object Profile : BottomNavItem(Screen.Profile, Icons.Default.Person, "Профиль")
     data object Office : BottomNavItem(Screen.Office, Icons.Default.Business, "Офис")
-    data object Merch : BottomNavItem(Screen.Merch, Icons.Default.ShoppingCart, "Мерч")
+    data object Merch : BottomNavItem(Screen.Merch, Icons.Default.ShoppingCart, "Шоп")
     data object Favorites : BottomNavItem(Screen.Favorites, Icons.Default.Star, "Избранное")
 }
 

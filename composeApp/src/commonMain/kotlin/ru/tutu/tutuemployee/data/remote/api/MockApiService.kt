@@ -442,26 +442,14 @@ class MockApiService : ApiService {
         return listOf(
             FavoriteItemDto(
                 id = "fav-1",
-                link = "https://jira.tutu.ru",
+                link = "https://hq.tutu.ru",
                 description = "Jira",
                 createdAt = "2025-01-01T10:00:00Z"
             ),
             FavoriteItemDto(
                 id = "fav-2",
-                link = "https://confluence.tutu.ru",
+                link = "https://dom.tutu.ru",
                 description = "Confluence",
-                createdAt = "2025-01-01T10:00:00Z"
-            ),
-            FavoriteItemDto(
-                id = "fav-3",
-                link = "https://gitlab.tutu.ru",
-                description = "GitLab",
-                createdAt = "2025-01-01T10:00:00Z"
-            ),
-            FavoriteItemDto(
-                id = "fav-4",
-                link = "https://portal.tutu.ru",
-                description = "Корпоративный портал",
                 createdAt = "2025-01-01T10:00:00Z"
             )
         )
