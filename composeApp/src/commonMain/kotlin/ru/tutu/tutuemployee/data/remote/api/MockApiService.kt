@@ -4,7 +4,7 @@ import kotlinx.coroutines.delay
 import ru.tutu.tutuemployee.data.remote.dto.*
 
 /**
- * Mock API Service для тестирования и разработки UI
+ * Mock API Service для тестирования и разработки UI (адаптирован под OpenAPI спецификацию)
  * Возвращает тестовые данные без реальных сетевых запросов
  */
 class MockApiService : ApiService {
@@ -13,13 +13,16 @@ class MockApiService : ApiService {
     private val networkDelay = 500L
 
     // Хранилище для избранного
-    private val favoritesStorage = mutableListOf<FavoriteCardDto>()
+    private val favoritesStorage = mutableListOf<FavoriteItemDto>()
 
     // Хранилище для мерча
     private var userBonusPoints = 500
 
     // Счетчик для генерации ID
     private var idCounter = 0
+
+    // Mock user ID
+    private val mockUserId = "user-123"
 
     private fun generateId(prefix: String): String {
         idCounter++
@@ -33,7 +36,7 @@ class MockApiService : ApiService {
             Result.success(
                 AuthResponse(
                     token = generateId("mock_token"),
-                    user = getMockUser()
+                    user = getMockUserDto()
                 )
             )
         } else {
@@ -41,21 +44,147 @@ class MockApiService : ApiService {
         }
     }
 
-    override suspend fun getCurrentUser(): Result<UserDto> {
+    // GET /v1/user - получение информации о пользователе
+    override suspend fun getUser(id: String): Result<UserDto> {
         delay(networkDelay)
-        return Result.success(getMockUser())
+        return Result.success(getMockUserDto())
     }
 
+    // GET /v1/news - получение списка новостей
+    override suspend fun getNewsList(
+        limit: Int?,
+        offset: Int?,
+        category: String?,
+        search: String?
+    ): Result<NewsListResponse> {
+        delay(networkDelay)
+        val allNews = getMockNewsPreviewList()
+
+        var filteredNews = allNews
+        if (!search.isNullOrEmpty()) {
+            filteredNews = filteredNews.filter {
+                it.title.contains(search, ignoreCase = true) ||
+                        it.previewText.contains(search, ignoreCase = true)
+            }
+        }
+
+        val actualOffset = offset ?: 0
+        val actualLimit = limit ?: filteredNews.size
+        val paginatedNews = filteredNews.drop(actualOffset).take(actualLimit)
+
+        return Result.success(
+            NewsListResponse(
+                total = filteredNews.size,
+                items = paginatedNews
+            )
+        )
+    }
+
+    // GET /v1/news/{id} - получение полной новости
+    override suspend fun getNewsItem(id: String): Result<NewsItemDto> {
+        delay(networkDelay)
+        return Result.success(getMockNewsItem(id))
+    }
+
+    // GET /v1/employees/search-by-last-name - поиск сотрудников по фамилии
+    override suspend fun searchEmployeesByLastName(
+        lastName: String,
+        limit: Int?,
+        offset: Int?
+    ): Result<EmployeeSearchResponse> {
+        delay(networkDelay)
+        val allEmployees = getMockEmployeesPreviews()
+        val filtered = allEmployees.filter {
+            it.lastName.contains(lastName, ignoreCase = true)
+        }
+
+        val actualOffset = offset ?: 0
+        val actualLimit = limit ?: 20
+        val paginated = filtered.drop(actualOffset).take(actualLimit)
+
+        return Result.success(
+            EmployeeSearchResponse(
+                total = filtered.size,
+                items = paginated
+            )
+        )
+    }
+
+    // GET /v1/vacations - получение отпусков сотрудника
+    override suspend fun getVacations(
+        employeeId: String,
+        year: Int?
+    ): Result<VacationListResponse> {
+        delay(networkDelay)
+        val allVacations = getMockVacationPeriods()
+        val filtered = if (year != null) {
+            allVacations.filter { it.startDate.startsWith(year.toString()) }
+        } else {
+            allVacations
+        }
+
+        return Result.success(
+            VacationListResponse(
+                employeeId = employeeId,
+                items = filtered
+            )
+        )
+    }
+
+    // GET /v1/favorites - получение избранных ссылок
+    override suspend fun getFavorites(userId: String): Result<FavoriteListResponse> {
+        delay(networkDelay)
+        if (favoritesStorage.isEmpty()) {
+            favoritesStorage.addAll(getDefaultFavoritesNew())
+        }
+        return Result.success(
+            FavoriteListResponse(
+                userId = userId,
+                items = favoritesStorage.toList()
+            )
+        )
+    }
+
+    // POST /v1/favorites - добавление избранной ссылки
+    override suspend fun addFavorite(request: AddFavoriteRequest): Result<FavoriteItemDto> {
+        delay(networkDelay)
+        val newFavorite = FavoriteItemDto(
+            id = generateId("fav"),
+            link = request.link,
+            description = request.description,
+            createdAt = "2025-12-11T10:00:00Z"
+        )
+        favoritesStorage.add(newFavorite)
+        return Result.success(newFavorite)
+    }
+
+    // DELETE /v1/favorites/{id} - удаление избранной ссылки
+    override suspend fun deleteFavorite(id: String): Result<Unit> {
+        delay(networkDelay)
+        favoritesStorage.removeAll { it.id == id }
+        return Result.success(Unit)
+    }
+
+    // GET /v1/achievements - получение ачивок пользователя
+    override suspend fun getAchievements(userId: String): Result<AchievementListResponse> {
+        delay(networkDelay)
+        return Result.success(getMockAchievementsResponse())
+    }
+
+    // Deprecated - старые методы для обратной совместимости
+    @Deprecated("Use getUser instead")
+    override suspend fun getCurrentUser(): Result<UserDto> {
+        delay(networkDelay)
+        return Result.success(getMockUserDto())
+    }
+
+    @Deprecated("Use getNewsList instead")
     override suspend fun getNews(): Result<List<NewsDto>> {
         delay(networkDelay)
         return Result.success(getMockNewsList())
     }
 
-    override suspend fun getBirthdays(): Result<List<BirthdayDto>> {
-        delay(networkDelay)
-        return Result.success(getMockBirthdays())
-    }
-
+    @Deprecated("Use searchEmployeesByLastName instead")
     override suspend fun searchEmployees(query: String): Result<List<UserDto>> {
         delay(networkDelay)
         val allEmployees = getMockEmployees()
@@ -63,28 +192,27 @@ class MockApiService : ApiService {
             allEmployees
         } else {
             allEmployees.filter {
-                it.firstName.contains(query, ignoreCase = true) ||
-                        it.lastName.contains(query, ignoreCase = true) ||
-                        it.position.contains(query, ignoreCase = true) ||
-                        it.department.contains(query, ignoreCase = true)
+                val firstName = it.personal?.firstName ?: ""
+                val lastName = it.personal?.lastName ?: ""
+                val position = it.employment?.position ?: ""
+                val department = it.employment?.department ?: ""
+                firstName.contains(query, ignoreCase = true) ||
+                        lastName.contains(query, ignoreCase = true) ||
+                        position.contains(query, ignoreCase = true) ||
+                        department.contains(query, ignoreCase = true)
             }
         }
         return Result.success(filtered)
     }
 
-    override suspend fun getAchievements(): Result<List<AchievementDto>> {
+    override suspend fun getBirthdays(): Result<List<BirthdayDto>> {
         delay(networkDelay)
-        return Result.success(getMockAchievements())
+        return Result.success(getMockBirthdays())
     }
 
     override suspend fun getTasks(): Result<List<TaskDto>> {
         delay(networkDelay)
         return Result.success(getMockTasks())
-    }
-
-    override suspend fun getVacations(): Result<List<VacationDto>> {
-        delay(networkDelay)
-        return Result.success(getMockVacations())
     }
 
     override suspend fun getCourses(): Result<List<CourseDto>> {
@@ -118,49 +246,228 @@ class MockApiService : ApiService {
         }
     }
 
-    override suspend fun getFavorites(): Result<List<FavoriteCardDto>> {
-        delay(networkDelay)
-        if (favoritesStorage.isEmpty()) {
-            favoritesStorage.addAll(getDefaultFavorites())
-        }
-        return Result.success(favoritesStorage.toList())
-    }
+    // Mock Data Generators for new API
 
-    override suspend fun addFavorite(title: String, url: String): Result<FavoriteCardDto> {
-        delay(networkDelay)
-        val newFavorite = FavoriteCardDto(
-            id = generateId("fav"),
-            title = title,
-            url = url,
-            iconUrl = null
-        )
-        favoritesStorage.add(newFavorite)
-        return Result.success(newFavorite)
-    }
-
-    override suspend fun deleteFavorite(id: String): Result<Unit> {
-        delay(networkDelay)
-        favoritesStorage.removeAll { it.id == id }
-        return Result.success(Unit)
-    }
-
-    // Mock Data Generators
-
-    private fun getMockUser(): UserDto {
+    private fun getMockUserDto(): UserDto {
         return UserDto(
-            id = "user_1",
-            username = "ivan.ivanov",
-            firstName = "Иван",
-            lastName = "Иванов",
-            position = "Senior Android Developer",
-            department = "Мобильная разработка",
-            legalEntity = "ООО Туту",
-            email = "ivan.ivanov@tutu.ru",
-            avatarUrl = "https://i.pravatar.cc/300?img=1",
-            availableVacationDays = 14,
-            bonusPoints = userBonusPoints
+            id = mockUserId,
+            status = "active",
+            personal = PersonalInfo(
+                firstName = "Иван",
+                lastName = "Иванов",
+                middleName = "Петрович",
+                email = "ivan.ivanov@tutu.ru",
+                phone = "+7 (999) 123-45-67"
+            ),
+            employment = EmploymentInfo(
+                position = "Senior Android Developer",
+                department = "Мобильная разработка",
+                location = "Москва, ул. Ленина 1",
+                startDate = "2020-01-15"
+            ),
+            roles = listOf("developer", "mentor"),
+            manager = ManagerInfo(
+                id = "mgr-1",
+                name = "Петр Сидоров",
+                email = "petr.sidorov@tutu.ru"
+            ),
+            externalIds = mapOf("jira" to "JIRA-123", "gitlab" to "12345")
         )
     }
+
+    private fun getMockNewsPreviewList(): List<NewsPreviewDto> {
+        return listOf(
+            NewsPreviewDto(
+                id = "news_1",
+                title = "Новый офис в Санкт-Петербурге",
+                previewText = "Мы рады сообщить об открытии нашего нового офиса...",
+                imageUrl = "https://picsum.photos/400/300?random=1",
+                publishedAt = "2024-01-15T10:30:00Z"
+            ),
+            NewsPreviewDto(
+                id = "news_2",
+                title = "Tutu Tech Day 2024",
+                previewText = "Приглашаем всех на ежегодную техническую конференцию...",
+                imageUrl = "https://picsum.photos/400/300?random=2",
+                publishedAt = "2024-01-14T14:00:00Z"
+            ),
+            NewsPreviewDto(
+                id = "news_3",
+                title = "Обновление корпоративного портала",
+                previewText = "Представляем новую версию корпоративного портала...",
+                imageUrl = "https://picsum.photos/400/300?random=3",
+                publishedAt = "2024-01-13T09:00:00Z"
+            ),
+            NewsPreviewDto(
+                id = "news_4",
+                title = "Yoga в офисе",
+                previewText = "Каждый четверг в 18:00 - занятия йогой в офисе...",
+                imageUrl = "https://picsum.photos/400/300?random=4",
+                publishedAt = "2024-01-12T12:00:00Z"
+            )
+        )
+    }
+
+    private fun getMockNewsItem(id: String): NewsItemDto {
+        return NewsItemDto(
+            id = id,
+            title = "Новый офис в Санкт-Петербурге",
+            fullText = """
+                Мы рады сообщить об открытии нашего нового офиса в Санкт-Петербурге! 
+                Современное пространство для работы и творчества.
+                
+                Офис оборудован всем необходимым для комфортной работы:
+                - Современные рабочие места
+                - Переговорные комнаты
+                - Зоны отдыха
+                - Кафетерий
+                
+                Добро пожаловать!
+            """.trimIndent(),
+            imageUrl = "https://picsum.photos/800/600?random=1",
+            publishedAt = "2024-01-15T10:30:00Z",
+            tags = listOf("офис", "новости", "санкт-петербург"),
+            author = AuthorDto(
+                id = "author-1",
+                name = "HR Department"
+            )
+        )
+    }
+
+    private fun getMockEmployeesPreviews(): List<EmployeePreviewDto> {
+        return listOf(
+            EmployeePreviewDto(
+                id = "emp-1",
+                firstName = "Мария",
+                lastName = "Петрова",
+                department = "HR",
+                position = "HR Manager",
+                avatarUrl = "https://i.pravatar.cc/150?img=5"
+            ),
+            EmployeePreviewDto(
+                id = "emp-2",
+                firstName = "Алексей",
+                lastName = "Сидоров",
+                department = "Backend",
+                position = "Senior Backend Developer",
+                avatarUrl = "https://i.pravatar.cc/150?img=8"
+            ),
+            EmployeePreviewDto(
+                id = "emp-3",
+                firstName = "Елена",
+                lastName = "Смирнова",
+                department = "Дизайн",
+                position = "UI/UX Designer",
+                avatarUrl = "https://i.pravatar.cc/150?img=9"
+            ),
+            EmployeePreviewDto(
+                id = "emp-4",
+                firstName = "Дмитрий",
+                lastName = "Козлов",
+                department = "Продукт",
+                position = "Product Manager",
+                avatarUrl = "https://i.pravatar.cc/150?img=12"
+            ),
+            EmployeePreviewDto(
+                id = "emp-5",
+                firstName = "Анна",
+                lastName = "Волкова",
+                department = "Quality Assurance",
+                position = "QA Engineer",
+                avatarUrl = "https://i.pravatar.cc/150?img=10"
+            )
+        )
+    }
+
+    private fun getMockVacationPeriods(): List<VacationPeriodDto> {
+        return listOf(
+            VacationPeriodDto(
+                vacationId = "vac-1",
+                startDate = "2025-02-10",
+                endDate = "2025-02-20",
+                type = "paid",
+                approvedBy = "mgr-1",
+                status = "approved"
+            ),
+            VacationPeriodDto(
+                vacationId = "vac-2",
+                startDate = "2024-12-25",
+                endDate = "2025-01-08",
+                type = "paid",
+                approvedBy = "mgr-1",
+                status = "approved"
+            ),
+            VacationPeriodDto(
+                vacationId = "vac-3",
+                startDate = "2024-08-01",
+                endDate = "2024-08-14",
+                type = "paid",
+                approvedBy = "mgr-1",
+                status = "approved"
+            )
+        )
+    }
+
+    private fun getMockAchievementsResponse(): AchievementListResponse {
+        return AchievementListResponse(
+            userId = mockUserId,
+            totalPoints = 150,
+            items = listOf(
+                AchievementItemDto(
+                    id = "ach-1",
+                    title = "Первый год в компании",
+                    description = "Поздравляем с первым годом работы в Tutu!",
+                    points = 50,
+                    achievedAt = "2023-06-01T00:00:00Z"
+                ),
+                AchievementItemDto(
+                    id = "ach-2",
+                    title = "Code Review Master",
+                    description = "Провел 100+ code review",
+                    points = 50,
+                    achievedAt = "2023-09-15T00:00:00Z"
+                ),
+                AchievementItemDto(
+                    id = "ach-3",
+                    title = "Наставник",
+                    description = "Помог адаптироваться 3 новым сотрудникам",
+                    points = 50,
+                    achievedAt = "2023-12-01T00:00:00Z"
+                )
+            )
+        )
+    }
+
+    private fun getDefaultFavoritesNew(): List<FavoriteItemDto> {
+        return listOf(
+            FavoriteItemDto(
+                id = "fav-1",
+                link = "https://jira.tutu.ru",
+                description = "Jira",
+                createdAt = "2025-01-01T10:00:00Z"
+            ),
+            FavoriteItemDto(
+                id = "fav-2",
+                link = "https://confluence.tutu.ru",
+                description = "Confluence",
+                createdAt = "2025-01-01T10:00:00Z"
+            ),
+            FavoriteItemDto(
+                id = "fav-3",
+                link = "https://gitlab.tutu.ru",
+                description = "GitLab",
+                createdAt = "2025-01-01T10:00:00Z"
+            ),
+            FavoriteItemDto(
+                id = "fav-4",
+                link = "https://portal.tutu.ru",
+                description = "Корпоративный портал",
+                createdAt = "2025-01-01T10:00:00Z"
+            )
+        )
+    }
+
+    // Old mock data generators for backward compatibility
 
     private fun getMockNewsList(): List<NewsDto> {
         return listOf(
@@ -229,68 +536,68 @@ class MockApiService : ApiService {
         return listOf(
             UserDto(
                 id = "emp_1",
-                username = "maria.petrova",
-                firstName = "Мария",
-                lastName = "Петрова",
-                position = "HR Manager",
-                department = "HR",
-                legalEntity = "ООО Туту",
-                email = "maria.petrova@tutu.ru",
-                avatarUrl = "https://i.pravatar.cc/150?img=5",
-                availableVacationDays = 20,
-                bonusPoints = 300
+                status = "active",
+                personal = PersonalInfo(
+                    firstName = "Мария",
+                    lastName = "Петрова",
+                    email = "maria.petrova@tutu.ru"
+                ),
+                employment = EmploymentInfo(
+                    position = "HR Manager",
+                    department = "HR"
+                )
             ),
             UserDto(
                 id = "emp_2",
-                username = "alexey.sidorov",
-                firstName = "Алексей",
-                lastName = "Сидоров",
-                position = "Senior Backend Developer",
-                department = "Backend",
-                legalEntity = "ООО Туту",
-                email = "alexey.sidorov@tutu.ru",
-                avatarUrl = "https://i.pravatar.cc/150?img=8",
-                availableVacationDays = 15,
-                bonusPoints = 450
+                status = "active",
+                personal = PersonalInfo(
+                    firstName = "Алексей",
+                    lastName = "Сидоров",
+                    email = "alexey.sidorov@tutu.ru"
+                ),
+                employment = EmploymentInfo(
+                    position = "Senior Backend Developer",
+                    department = "Backend"
+                )
             ),
             UserDto(
                 id = "emp_3",
-                username = "elena.smirnova",
-                firstName = "Елена",
-                lastName = "Смирнова",
-                position = "UI/UX Designer",
-                department = "Дизайн",
-                legalEntity = "ООО Туту",
-                email = "elena.smirnova@tutu.ru",
-                avatarUrl = "https://i.pravatar.cc/150?img=9",
-                availableVacationDays = 18,
-                bonusPoints = 200
+                status = "active",
+                personal = PersonalInfo(
+                    firstName = "Елена",
+                    lastName = "Смирнова",
+                    email = "elena.smirnova@tutu.ru"
+                ),
+                employment = EmploymentInfo(
+                    position = "UI/UX Designer",
+                    department = "Дизайн"
+                )
             ),
             UserDto(
                 id = "emp_4",
-                username = "dmitry.kozlov",
-                firstName = "Дмитрий",
-                lastName = "Козлов",
-                position = "Product Manager",
-                department = "Продукт",
-                legalEntity = "ООО Туту",
-                email = "dmitry.kozlov@tutu.ru",
-                avatarUrl = "https://i.pravatar.cc/150?img=12",
-                availableVacationDays = 10,
-                bonusPoints = 600
+                status = "active",
+                personal = PersonalInfo(
+                    firstName = "Дмитрий",
+                    lastName = "Козлов",
+                    email = "dmitry.kozlov@tutu.ru"
+                ),
+                employment = EmploymentInfo(
+                    position = "Product Manager",
+                    department = "Продукт"
+                )
             ),
             UserDto(
                 id = "emp_5",
-                username = "anna.volkova",
-                firstName = "Анна",
-                lastName = "Волкова",
-                position = "QA Engineer",
-                department = "Quality Assurance",
-                legalEntity = "ООО Туту",
-                email = "anna.volkova@tutu.ru",
-                avatarUrl = "https://i.pravatar.cc/150?img=10",
-                availableVacationDays = 22,
-                bonusPoints = 350
+                status = "active",
+                personal = PersonalInfo(
+                    firstName = "Анна",
+                    lastName = "Волкова",
+                    email = "anna.volkova@tutu.ru"
+                ),
+                employment = EmploymentInfo(
+                    position = "QA Engineer",
+                    department = "Quality Assurance"
+                )
             )
         )
     }

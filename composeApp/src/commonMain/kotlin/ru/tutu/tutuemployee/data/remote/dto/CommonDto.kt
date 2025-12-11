@@ -1,5 +1,6 @@
 package ru.tutu.tutuemployee.data.remote.dto
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.tutu.tutuemployee.domain.model.*
 
@@ -21,7 +22,26 @@ fun BirthdayDto.toDomain() = Birthday(
     avatarUrl = avatarUrl
 )
 
-// Achievement DTO
+// Achievement DTO (согласно OpenAPI)
+@Serializable
+data class AchievementListResponse(
+    @SerialName("user_id")
+    val userId: String,
+    @SerialName("total_points")
+    val totalPoints: Int,
+    val items: List<AchievementItemDto>
+)
+
+@Serializable
+data class AchievementItemDto(
+    val id: String,
+    val title: String,
+    val description: String,
+    val points: Int,
+    @SerialName("achieved_at")
+    val achievedAt: String
+)
+
 @Serializable
 data class AchievementDto(
     val id: String,
@@ -37,6 +57,14 @@ fun AchievementDto.toDomain() = Achievement(
     description = description,
     iconUrl = iconUrl,
     earnedAt = earnedAt
+)
+
+fun AchievementItemDto.toDomain() = Achievement(
+    id = id,
+    title = title,
+    description = description,
+    iconUrl = null,
+    earnedAt = achievedAt
 )
 
 // Task DTO
@@ -70,7 +98,28 @@ fun TaskStatusDto.toDomain() = when (this) {
     TaskStatusDto.DONE -> TaskStatus.DONE
 }
 
-// Vacation DTO
+// Vacation DTO (согласно OpenAPI)
+@Serializable
+data class VacationListResponse(
+    @SerialName("employee_id")
+    val employeeId: String,
+    val items: List<VacationPeriodDto>
+)
+
+@Serializable
+data class VacationPeriodDto(
+    @SerialName("vacation_id")
+    val vacationId: String,
+    @SerialName("start_date")
+    val startDate: String,
+    @SerialName("end_date")
+    val endDate: String,
+    val type: String,
+    @SerialName("approved_by")
+    val approvedBy: String? = null,
+    val status: String
+)
+
 @Serializable
 data class VacationDto(
     val id: String,
@@ -96,6 +145,23 @@ fun VacationDto.toDomain() = Vacation(
     status = status.toDomain(),
     reason = reason
 )
+
+fun VacationPeriodDto.toDomain(): Vacation {
+    val status = when (status.lowercase()) {
+        "approved" -> VacationStatus.APPROVED
+        "pending" -> VacationStatus.PLANNED
+        "rejected" -> VacationStatus.REJECTED
+        else -> VacationStatus.PLANNED
+    }
+    return Vacation(
+        id = vacationId,
+        startDate = startDate,
+        endDate = endDate,
+        daysCount = 0, // Calculate if needed
+        status = status,
+        reason = type
+    )
+}
 
 fun VacationStatusDto.toDomain() = when (this) {
     VacationStatusDto.PLANNED -> VacationStatus.PLANNED
@@ -182,7 +248,31 @@ fun MerchCategoryDto.toDomain() = when (this) {
     MerchCategoryDto.ELECTRONICS -> MerchCategory.ELECTRONICS
 }
 
-// FavoriteCard DTO
+// FavoriteCard DTO (согласно OpenAPI)
+@Serializable
+data class FavoriteListResponse(
+    @SerialName("user_id")
+    val userId: String,
+    val items: List<FavoriteItemDto>
+)
+
+@Serializable
+data class FavoriteItemDto(
+    val id: String,
+    val link: String,
+    val description: String? = null,
+    @SerialName("created_at")
+    val createdAt: String? = null
+)
+
+@Serializable
+data class AddFavoriteRequest(
+    @SerialName("user_id")
+    val userId: String,
+    val link: String,
+    val description: String? = null
+)
+
 @Serializable
 data class FavoriteCardDto(
     val id: String,
@@ -198,6 +288,13 @@ fun FavoriteCardDto.toDomain() = FavoriteCard(
     iconUrl = iconUrl
 )
 
+fun FavoriteItemDto.toDomain() = FavoriteCard(
+    id = id,
+    title = description ?: link,
+    url = link,
+    iconUrl = null
+)
+
 // Auth DTO
 @Serializable
 data class AuthRequest(
@@ -209,4 +306,11 @@ data class AuthRequest(
 data class AuthResponse(
     val token: String,
     val user: UserDto
+)
+
+// Error Response (согласно OpenAPI)
+@Serializable
+data class ErrorResponse(
+    val error: String,
+    val message: String
 )
